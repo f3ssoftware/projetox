@@ -3,8 +3,6 @@ import { InputNumber } from "primereact/inputnumber";
 import { Calendar } from "primereact/calendar";
 import { Checkbox } from "primereact/checkbox";
 import { Installment } from "../../../models/Installment";
-import { useFormik } from "formik";
-import { classNames } from "primereact/utils";
 import { CurrencyEnum } from "../../../Shared/enums/CurrencyEnum";
 
 export default function InstallmentForm({

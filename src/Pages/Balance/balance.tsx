@@ -167,7 +167,7 @@ export default function Balance() {
                 }}
               ></SelectWallet>
             </Dialog>
-            {/*  */}
+
           </div>
           
           {selectedWallet ? <div className="finantial-organization">
