@@ -276,7 +276,7 @@ export default function Balance() {
               body={(data) => {
                 return (
                   <span>
-                    {new Date(data.createdAt).toLocaleDateString("pt-BR")}
+                    {new Date(data.due_date).toLocaleDateString("pt-BR")}
                   </span>
                 );
               }}
@@ -303,7 +303,7 @@ export default function Balance() {
                 <span>{transaction.paid ? "Pago" : "Não Pago"}</span>
               )}
               header="Pago"
-            ></Column>
+            ></Column> 
             <Column field="observation" header="Observação"></Column>
           </DataTable>
         </div>

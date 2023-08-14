@@ -18,19 +18,16 @@
     height: 100vh;
     background-color: #2B2B2B;
     display: flex;
-    
     max-height:fit-content;
 }
 
 .fitting{
     width: 67%;
-    height:100vh;
-    
+    height:100vh;   
 }
-
 .login{
     
-    background-color: white;
+    background-color:#2B2B2B;
     width:33%;
     height: 100vh;
     display:flex;
@@ -42,15 +39,22 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items:start;
+    align-items:center;
     justify-content:center;
     padding: 10%;
-    
+}
+
+.pull-everybody .logo{
+    margin-bottom: 5%;
 }
 .pull-everybody label{
-    color:#2B2B2B;
+    color:white;
     font-family: Roboto;
     margin: 1.5% 0;
+}
+
+form{
+    width: 100%;
 }
 
 .p-inputtext{

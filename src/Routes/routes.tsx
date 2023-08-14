@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
 import Login from '../Pages/Login/Login'
-import Register from '../Pages/Register/Register'
+import EmailRegister from '../Pages/Register/Email_Register'
+import Register from '../Pages/Register/Register_Step1'
 import Balance from '../Pages/Balance/balance'
 import Due_Dated from '../Pages/Balance/due_dated'
 import Payable from '../Pages/Balance/payable'
@@ -21,6 +22,7 @@ function Rotas() {
 
                 <Route path='/' element={<Verifying />} />
                 <Route path='/login' element={<Login />} />
+                <Route path='/email_register' element={<EmailRegister />} />
                 <Route path='/register' element={<Register />} />
 
                 <Route element={<Casket />}>
