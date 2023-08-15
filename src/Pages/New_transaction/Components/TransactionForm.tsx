@@ -17,13 +17,13 @@ export default function TransactionForm({
   onSuccess,
   onError,
   closeDialog,
-  walletCurrency
+  walletCurrency,
 }: {
   walletId: string;
   onSuccess: Function;
   onError: Function;
-  closeDialog: any
-  walletCurrency: CurrencyEnum
+  closeDialog: any;
+  walletCurrency: CurrencyEnum;
 }) {
   const [value, setValue] = useState(0);
   const [date, setDate] = useState<string | Date | Date[] | null>([]);
@@ -60,28 +60,38 @@ export default function TransactionForm({
         : onError("error", "Erro", "");
     }
   };
+  const inst: {amount: number, date: any[], paid: boolean}[] = [];
   const formik = useFormik({
     initialValues: {
       reference: "",
       value: null,
       date: [],
-      selectedType: '',
+      installments: inst,
+      selectedType: "",
     },
     validate: (data) => {
       let errors: any = {};
 
-        !data.reference ? (
-          (errors.reference = data?.reference?.length === 0)
-        ) : <></>
-        !data.value ? (
-          (errors.value = data?.value === null)
-        ) : <></>
-        !data.date ? (
-          (errors.date = data?.date === null)
-        ) : <></>
-        !data.selectedType ? (
-          (errors.selectedType = data?.selectedType?.length === 0)
-        ) : <></>
+      !data.reference ? (
+        (errors.reference = data?.reference?.length === 0)
+      ) : (
+        <></>
+      );
+      !data.value ? (errors.value = data?.value === null) : <></>;
+      data.installments.forEach(((installment, index) => {
+        if(installment.amount === 0) {
+          console.log(installment);
+          errors.installments[index].amount = true;
+          console.log(errors)
+        }
+      }))
+      data.installments.length === 0 ? (errors.installments = true) : <></>;
+      !data.date ? (errors.date = data?.date === null) : <></>;
+      !data.selectedType ? (
+        (errors.selectedType = data?.selectedType?.length === 0)
+      ) : (
+        <></>
+      );
 
       return errors;
     },
@@ -97,8 +107,6 @@ export default function TransactionForm({
     return !!formikToucheds[fieldName] && !!formikError[fieldName];
   };
 
-  
-
   const paidValidate = () => {
     const isPaid =
       installments.filter((i: Installment) => i.paid === false).length > 0;
@@ -110,7 +118,7 @@ export default function TransactionForm({
 
   useEffect(() => {
     paidValidate();
-  },[installments]);
+  }, [installments]);
 
   const onUpdateItem = (installment: Installment, index: number) => {
     const installmentsArr = [...installments];
@@ -165,7 +173,7 @@ export default function TransactionForm({
                   "p-invalid": isFormFieldInvalid("value"),
                 })}
                 mode="currency"
-                currency= {walletCurrency}
+                currency={walletCurrency}
                 locale="pt-BR"
               />
               <label htmlFor="amount">Valor *</label>
@@ -210,9 +218,13 @@ export default function TransactionForm({
               <Dropdown
                 value={formik.values.selectedType}
                 name="selectedType"
-                onChange={(e: DropdownChangeEvent) => {setSelectedType(e.value); formik.setFieldValue('selectedType', e.value)}}
+                onChange={(e: DropdownChangeEvent) => {
+                  setSelectedType(e.value);
+                  formik.setFieldValue("selectedType", e.value);
+                }}
                 className={classNames({
-                  "p-invalid w-full md:w-14rem": isFormFieldInvalid("selectedType"),
+                  "p-invalid w-full md:w-14rem":
+                    isFormFieldInvalid("selectedType"),
                 })}
                 options={[
                   { label: "Cobrança", value: "BILLING" },
@@ -233,7 +245,13 @@ export default function TransactionForm({
               <InputNumber
                 value={installmentNumber}
                 onChange={(e) => {
-                  updateInstallmentNumber(e.value!);
+                  const array = [];
+                  // formik.setFieldValue('installments', [...formik.values.installments, { amount: 0, date: new Date(), paid: false }]);
+                  for (let i = 0; i < e.value!; i++) {
+                    array.push({ amount: undefined, date: undefined, paid: false });
+                  }
+                  formik.setFieldValue("installments", array);
+                  // updateInstallmentNumber(e.value!);
                   setInstallmentNumber(e.value!);
                 }}
                 showButtons
@@ -271,7 +289,77 @@ export default function TransactionForm({
         </div>
         <div className="grid" style={{ marginTop: "2%" }}>
           <div className="col-12">
-            {installments.map((newInstallments, index) => {
+            {formik.values.installments.map((installment: any, index) => {
+              return (
+                <div className="formgrid grid" style={{ marginTop: "2%" }}>
+                  <div className="field col">
+                    <span className="p-float-label">
+                      <InputNumber
+                        id="amount"
+                        name="amount"
+                        value={installment.amount}
+                        onValueChange={(e) => {
+                          formik.setFieldValue(
+                            `installments.${index}.amount`,
+                            e.target.value
+                          );
+                        }}
+                        className={classNames({
+                          "p-invalid": isFormFieldInvalid(
+                            `installments.${index}.amount`
+                          ),
+                        })}
+                        mode="currency"
+                        currency={walletCurrency}
+                        locale="pt-BR"
+                      />
+                      <label htmlFor="amount">
+                        Valor (Parcela {index + 1}) *
+                      </label>
+                    </span>
+                  </div>
+                  <div className="field col">
+                    <span className="p-float-label">
+                      <Calendar
+                        value={installment.date}
+                        onChange={(e: any) => {
+                          formik.setFieldValue(
+                            `installments.${index}.date`,
+                            e.target.value
+                          );
+                        }}
+                        locale="en"
+                        className={classNames({
+                          "p-invalid": isFormFieldInvalid(
+                            `installments.${index}.date`
+                          ),
+                        })}
+                        dateFormat="dd/mm/yy"
+                      />
+                      <label htmlFor="date">Data *</label>
+                    </span>
+                  </div>
+                  <div className="field col">
+                    <div
+                      className="flex align-items-center"
+                      style={{ marginTop: "5%" }}
+                    >
+                      <Checkbox
+                        inputId="paid"
+                        name="paid"
+                        value=""
+                        onChange={(e) => setPaid(e.checked!)}
+                        checked={installments[index]?.paid!}
+                      ></Checkbox>
+                      <label htmlFor="paid" className="ml-2">
+                        Pago
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+            {/* {installments.map((newInstallments, index) => {
               return (
                 <InstallmentForm
                   index={index}
@@ -281,7 +369,7 @@ export default function TransactionForm({
                   walletCurrency={walletCurrency}
                 ></InstallmentForm>
               );
-            })}
+            })} */}
           </div>
         </div>
         <div className="grid">
@@ -289,7 +377,12 @@ export default function TransactionForm({
             <Button
               label="Salvar"
               type="submit"
-              onClick={asyncNewTransaction}
+              onClick={() => {
+                // formik.setFieldValue('installments', [...formik.values.installments, { amount: 0, date: new Date(), paid: false }])
+                // console.log(formik.values);
+                // formik.values.installments.push({ amount: 600, date: new Date() },);
+              }}
+              // onClick={asyncNewTransaction}
               style={{ marginTop: "10%" }}
             />
           </div>
