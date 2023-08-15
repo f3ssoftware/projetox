@@ -71,7 +71,7 @@ export default function TransactionForm({
     },
     validate: (data) => {
       let errors: any = {};
-
+      errors.installments = [];
       !data.reference ? (
         (errors.reference = data?.reference?.length === 0)
       ) : (
@@ -79,13 +79,15 @@ export default function TransactionForm({
       );
       !data.value ? (errors.value = data?.value === null) : <></>;
       data.installments.forEach(((installment, index) => {
-        if(installment.amount === 0) {
+        if(installment.amount === null) {
           console.log(installment);
-          errors.installments[index].amount = true;
+          errors.installments[index] = {
+            amount: installment.amount === null
+          }
+          
           console.log(errors)
         }
       }))
-      data.installments.length === 0 ? (errors.installments = true) : <></>;
       !data.date ? (errors.date = data?.date === null) : <></>;
       !data.selectedType ? (
         (errors.selectedType = data?.selectedType?.length === 0)
@@ -300,13 +302,13 @@ export default function TransactionForm({
                         value={installment.amount}
                         onValueChange={(e) => {
                           formik.setFieldValue(
-                            `installments.${index}.amount`,
+                            `installments[${index}].amount`,
                             e.target.value
                           );
                         }}
                         className={classNames({
                           "p-invalid": isFormFieldInvalid(
-                            `installments.${index}.amount`
+                            `installments[${index}].amount`
                           ),
                         })}
                         mode="currency"
@@ -377,12 +379,12 @@ export default function TransactionForm({
             <Button
               label="Salvar"
               type="submit"
-              onClick={() => {
-                // formik.setFieldValue('installments', [...formik.values.installments, { amount: 0, date: new Date(), paid: false }])
-                // console.log(formik.values);
-                // formik.values.installments.push({ amount: 600, date: new Date() },);
-              }}
-              // onClick={asyncNewTransaction}
+              // onClick={() => {
+              //   // formik.setFieldValue('installments', [...formik.values.installments, { amount: 0, date: new Date(), paid: false }])
+              //   // console.log(formik.values);
+              //   // formik.values.installments.push({ amount: 600, date: new Date() },);
+              // }}
+              onClick={asyncNewTransaction}
               style={{ marginTop: "10%" }}
             />
           </div>
