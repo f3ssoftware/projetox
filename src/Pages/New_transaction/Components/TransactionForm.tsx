@@ -94,7 +94,7 @@ export default function TransactionForm({
     },
     onSubmit: (data) => {
       data && onError(data);
-      console.log(data)
+      
       formik.resetForm();
     },
   });
@@ -165,7 +165,7 @@ export default function TransactionForm({
                   formik.setFieldValue("reference", e.target.value);
                   setReference(e.target.value);
                  
-                }}
+                }} 
                 className={classNames({
                   "p-invalid": isFormFieldInvalid("reference"),
                 })}
