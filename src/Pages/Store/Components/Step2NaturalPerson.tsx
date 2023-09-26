@@ -84,17 +84,19 @@ export default function Step2NaturalPerson() {
             setPublicPlaceValue('');
         }
     }, [postalCodelValue]);
+    
 
     return (
         <div>
             <Toast ref={toast} />
             <Formik
+                
                 initialValues={{ completeName: '', telphone: '', email: '', SSN: '', postalCode: '', state: '' }}
                 validationSchema={Yup.object({
                     completeName: Yup.string()
                         .max(35, 'Precisa ter 35 caracteres ou menos')
                         .required('Necessário preencher'),
-                        
+
                     telphone: Yup.number()
                         .max(13, 'Favor, inserir número com DDD')
                         .required('Necessário preencher'),
@@ -112,10 +114,13 @@ export default function Step2NaturalPerson() {
                         .required('Preencha seu Estado'),
                 })}
                 onSubmit={(values, { setSubmitting }) => {
+                   
                     setTimeout(() => {
                         alert(JSON.stringify(values, null, 2));
+                        
                         setSubmitting(false);
                     }, 400);
+                    
                 }}
 
 
@@ -129,14 +134,20 @@ export default function Step2NaturalPerson() {
                                 <span className="p-float-label" >
                                     <InputText
                                         id="completeName"
-                                        {...formik.getFieldProps('completeName')}
+                                        
+                                        // {...formik.getFieldProps('completeName')}
+                                        onChange={(e) => {
+                                            formik.setFieldValue("completeName", e.target.value);
+                                            setNameValue(e.target.value);
+                                           
+                                          }} 
                                         className={classNames({
                                             "p-invalid": formik.touched.completeName && formik.errors.completeName,
-                                          })}
+                                        })}
                                     />
                                     
                                     {formik.touched.completeName && formik.errors.completeName ? (
-                                        <div style={{color:'red', fontSize:'12px', fontFamily:'Roboto'}}>{formik.errors.completeName}</div>
+                                        <div style={{ color: 'red', fontSize: '12px', fontFamily: 'Roboto' }}>{formik.errors.completeName}</div>
                                     ) : null}
 
                                     <label htmlFor="completeName">Nome Completo*</label>
@@ -147,13 +158,29 @@ export default function Step2NaturalPerson() {
                         <div className="grid" style={{ marginTop: '2%' }}>
                             <div className="col-6">
                                 <span className="p-float-label" >
-                                    <InputText  id="email" value={emailValue} onChange={(e) => setEmailValue(e.target.value)} />
+                                    <InputText id="email"
+                                        onChange={(e) => {
+                                            formik.setFieldValue("email", e.target.value);
+                                            setEmailValue(e.target.value);              
+                                          }} 
+                                        
+                                        className={classNames({
+                                            "p-invalid": formik.touched.email && formik.errors.email,
+                                        })}
+                                        
+                                    />
+
+                                    {formik.touched.email && formik.errors.email ? (
+                                        <div style={{ color: 'red', fontSize: '12px', fontFamily: 'Roboto' }}>{formik.errors.email}</div>
+                                    ) : null}
+
                                     <label htmlFor="email">Email*</label>
                                 </span>
                             </div>
                             <div className="col-3">
                                 <span className="p-float-label" >
-                                    <InputText value={telphoneValue} onChange={(e) => setTelphoneValue(e.target.value)} />
+                                    <InputText id="telphone"
+                                     onChange={(e) => {setTelphoneValue(e.target.value); formik.setFieldValue("telphone`", e.target.value); }} />
                                     <label htmlFor="telphone">Telefone*</label>
                                 </span>
                             </div>
@@ -235,7 +262,9 @@ export default function Step2NaturalPerson() {
 
                             <div className='col-1'>
                                 <div className="secondButton">
-                                    <Button label="PRÓXIMO" type="submit" />
+                                    <Button label="PRÓXIMO" type="submit" 
+                                    
+                                    />
 
                                 </div>
                             </div>
