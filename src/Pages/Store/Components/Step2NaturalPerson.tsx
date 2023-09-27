@@ -173,7 +173,7 @@ export default function Step2NaturalPerson() {
                             </div>
                             <div className="col-3">
                                 <span className="p-float-label" >
-                                    <InputMask value={formik.values.telphone}
+                                    <InputMask 
                                         id="telphone" name='telphone' onChange={(e: InputMaskChangeEvent) => { setTelphoneValue(e.target.value?.replace(/[^\d]/g, "")); formik.setFieldValue("telphone", e.target.value?.replace(/[^\d]/g, "")) }}
                                         mask="+99 99 9999999?99"
 
