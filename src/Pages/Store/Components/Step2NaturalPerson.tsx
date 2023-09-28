@@ -11,8 +11,10 @@ import { InputMask, InputMaskChangeEvent } from 'primereact/inputmask';
 import { BrazilState } from '../../../Shared/enums/BrazilState';
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { InputNumber, InputNumberValueChangeEvent } from "primereact/inputnumber";
+import { RadioButton, RadioButtonChangeEvent } from 'primereact/radiobutton';
+import "./Step2.css"
 
-export default function Step2NaturalPerson() {
+export default function Step2NaturalPerson({ personChosed, changeStep, paymentMethod, productId }: { personChosed: string, changeStep: any, paymentMethod: any, productId: any }) {
 
 
     const [nameValue, setNameValue] = useState('');
@@ -26,12 +28,66 @@ export default function Step2NaturalPerson() {
     const [publicPlaceValue, setPublicPlaceValue] = useState('');
     const [numberValue, setNumberValueValue] = useState<number>(undefined!);
     const [birthday, setBirthday] = useState('');
+    const categories = [
+        { sex: 'Masculino', key: 'M' },
+        { sex: 'Feminino', key: 'F' },
+
+    ];
+    const [selectedCategory, setSelectedCategory] = useState<any>(categories[0]);
     const toast = useRef<Toast>(null);
     const brazilStates: BrazilState[] = Object.values(BrazilState);
 
     const showStepToast = (severity: ToastMessage["severity"], summary: string, detail: string) => {
         toast.current?.show([{ severity, summary, detail }]);
+    };
 
+    const SendForm = async () => {
+        try {
+            await axios.post(
+                `${process.env.REACT_APP_API_URL}/v1/checkout`,
+                {
+                    payment_method: paymentMethod.key,
+                    customer: {
+                        name: nameValue,
+                        email: emailValue,
+                        phone_number: {
+                            country_code: telphoneValue[0] + telphoneValue[1],
+                            area_code: telphoneValue[2] + telphoneValue[3],
+                            number: telphoneValue.slice(4, 13)
+                        },
+
+                        document: SSN,
+                        document_type: 'CPF',
+                        type: personChosed,
+                        address: {
+                            zipcode: postalCodelValue,
+                            state: stateValue,
+                            city: countyValue,
+                            district: neighborhoodValue,
+                            address: publicPlaceValue,
+                            number: numberValue,
+                            country: '55'
+                        },
+                        birthDate: birthday,
+                        gender: selectedCategory
+                    },
+                    products: [productId]
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${sessionStorage.getItem("access_token")!}`,
+                    },
+                },
+
+            );
+            showStepToast("success", "Successo", "Transação incluida com sucesso");
+            changeStep(3);
+
+        } catch (err) {
+            err = 400
+                ? (showStepToast("error", "Erro", "Preencha os campos obrigatórios"))
+                : showStepToast("error", "Erro", "" + err);
+        }
     };
 
     let maxDate = new Date();
@@ -44,6 +100,7 @@ export default function Step2NaturalPerson() {
             setNeighborhoodValue(result.data.bairro);
             setPublicPlaceValue(result.data.logradouro);
             setCountyValue(result.data.localidade)
+
         } catch (err) {
             alert(err);
         }
@@ -61,11 +118,10 @@ export default function Step2NaturalPerson() {
         }
     }, [postalCodelValue]);
 
-    // useEffect(() => {
-    //     console.log(brazilStates);
-    // }, []);
+    useEffect(() => {
+        console.log(paymentMethod.key)
 
-
+    }, [paymentMethod])
 
     return (
         <div>
@@ -102,6 +158,7 @@ export default function Step2NaturalPerson() {
                         .required('Necessário preencher'),
                     number: Yup.number()
                         .required('Necessário preencher'),
+
                 })}
 
                 onSubmit={(values, { setSubmitting }) => {
@@ -109,7 +166,7 @@ export default function Step2NaturalPerson() {
                     setTimeout(() => {
                         alert(JSON.stringify(values, null, 2));
 
-                        setSubmitting(false);
+                        setSubmitting(true);
                     }, 400);
 
                 }}
@@ -121,6 +178,33 @@ export default function Step2NaturalPerson() {
                     <form onSubmit={formik.handleSubmit}>
 
                         <div className="grid">
+                            <div className="col-12" >
+                                <h4 style={{}}>Sexo</h4>
+                            </div>
+                            <div className="col-12">
+
+                                <div className="grid" style={{ marginBottom: '3%' }}>
+                                    {categories.map((category) => {
+                                        return (
+
+                                            <div key={category.key} className="col-12 md:col-3 lg:col-3">
+                                                <RadioButton inputId={category.key} name="category" value={category} onChange={(e: RadioButtonChangeEvent) => { setSelectedCategory(e.value) }} checked={selectedCategory.key === category.key} />
+
+                                                <label htmlFor={category.key} className="ml-2">{category.sex}</label>
+                                            </div>
+
+                                        );
+
+                                    }
+
+                                    )}
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div className="grid" style={{ marginBottom: '2%' }}>
 
 
                             <div className="col-12">
@@ -148,8 +232,8 @@ export default function Step2NaturalPerson() {
                             </div>
                         </div>
 
-                        <div className="grid" style={{ marginTop: '2%' }}>
-                            <div className="col-6">
+                        <div className="grid" style={{ marginBottom: '2%' }}>
+                            <div className="col-12 md:col-6" style={{ marginTop: '2%' }}>
                                 <span className="p-float-label" >
                                     <InputText id="email" name='email'
                                         value={formik.values.email}
@@ -171,9 +255,9 @@ export default function Step2NaturalPerson() {
                                     <label htmlFor="email">Email*</label>
                                 </span>
                             </div>
-                            <div className="col-3">
+                            <div className="col-12 md:col-3" style={{ marginTop: '2%' }}>
                                 <span className="p-float-label" >
-                                    <InputMask 
+                                    <InputMask
                                         id="telphone" name='telphone' onChange={(e: InputMaskChangeEvent) => { setTelphoneValue(e.target.value?.replace(/[^\d]/g, "")); formik.setFieldValue("telphone", e.target.value?.replace(/[^\d]/g, "")) }}
                                         mask="+99 99 9999999?99"
 
@@ -187,12 +271,12 @@ export default function Step2NaturalPerson() {
                                     <label htmlFor="telphone">Telefone*</label>
                                 </span>
                             </div>
-                            <div className="col-3">
+                            <div className="col-12 md:col-3" style={{ marginTop: '2%' }}>
                                 <span className="p-float-label" >
 
                                     <InputMask id="SSN" name='SSN' onChange={(e: InputMaskChangeEvent) => { setSSN(e.target.value?.replace(/[^\d]/g, "")); formik.setFieldValue("SSN", e.target.value?.replace(/[^\d]/g, "")) }}
                                         mask="999.999.999-99"
-                                        value={formik.values.SSN}
+
                                         className={classNames({
                                             "p-invalid": formik.touched.SSN && formik.errors.SSN,
                                         })} />
@@ -205,13 +289,13 @@ export default function Step2NaturalPerson() {
                             </div>
                         </div>
 
-                        <div className="grid" style={{ marginTop: '2%' }}>
-                            <div className="col-3">
+                        <div className="grid" style={{ marginBottom: '2%' }}>
+                            <div className="col-12 md:col-3" style={{ marginTop: '2%' }}>
                                 <span className="p-float-label" >
 
                                     <InputMask id="postalCode" name='postalCode' onChange={(e: InputMaskChangeEvent) => { setPostalCodelValue(e.target.value?.replace(/[^\d]/g, "")); formik.setFieldValue("postalCode", e.target.value?.replace(/[^\d]/g, "")) }}
                                         mask="99999-999"
-                                        
+
                                         className={classNames({
                                             "p-invalid": formik.touched.postalCode && formik.errors.postalCode,
                                         })} />
@@ -221,22 +305,24 @@ export default function Step2NaturalPerson() {
                                     <label htmlFor="postalCode">CEP*</label>
                                 </span>
                             </div>
-                            <div className="col-3">
-                                <span className="p-float-label" >
+                            <div className="col-6 md:col-3" style={{ marginTop: '2%' }}>
+                                <div className="step2-dropdown">
+                                    <span className="p-float-label" >
 
-                                    <Dropdown value={stateValue} id="state" onChange={(e: DropdownChangeEvent) => { setStateValue(e.target.value); formik.setFieldValue('state', e.target.value) }} options={brazilStates}
-                                        className={classNames({
-                                            "p-invalid": formik.touched.neighborhood && !stateValue,
-                                        })}
+                                        <Dropdown style={{ height: '100%' }} value={stateValue} id="state" onChange={(e: DropdownChangeEvent) => { setStateValue(e.target.value); formik.setFieldValue('state', e.target.value) }} options={brazilStates}
+                                            className={classNames({
+                                                "p-invalid": formik.touched.neighborhood && !stateValue,
+                                            })}
 
-                                    />
-                                    {formik.touched.neighborhood && !stateValue ? (
-                                        <div style={{ color: 'red', fontSize: '12px', fontFamily: 'Roboto' }}>{formik.errors.state}</div>
-                                    ) : null}
-                                    <label htmlFor="state">UF*</label>
-                                </span>
+                                        />
+                                        {formik.touched.neighborhood && !stateValue ? (
+                                            <div style={{ color: 'red', fontSize: '12px', fontFamily: 'Roboto' }}>{formik.errors.state}</div>
+                                        ) : null}
+                                        <label htmlFor="state">UF*</label>
+                                    </span>
+                                </div>
                             </div>
-                            <div className="col-3">
+                            <div className="col-6 md:col-3" style={{ marginTop: '2%' }}>
                                 <span className="p-float-label" >
                                     <InputText
                                         id="county" name='county'
@@ -252,7 +338,7 @@ export default function Step2NaturalPerson() {
                                     <label htmlFor="county">Municipio*</label>
                                 </span>
                             </div>
-                            <div className="col-3">
+                            <div className="col-12 md:col-3" style={{ marginTop: '2%' }}>
                                 <span className="p-float-label" >
                                     <InputText
                                         id='neighborhood'
@@ -271,8 +357,8 @@ export default function Step2NaturalPerson() {
                             </div>
                         </div>
 
-                        <div className="grid" style={{ marginTop: '2%' }}>
-                            <div className="col-6">
+                        <div className="grid" style={{ marginBottom: '2%' }}>
+                            <div className="col-12 md:col-6" style={{ marginTop: '2%' }}>
                                 <span className="p-float-label" >
                                     <InputText value={publicPlaceValue} onChange={(e) => { setPublicPlaceValue(e.target.value); formik.setFieldValue('publicPlace', e.target.value) }}
                                         className={classNames({
@@ -287,7 +373,7 @@ export default function Step2NaturalPerson() {
                                     <label htmlFor="publicPlace">Logradouro*</label>
                                 </span>
                             </div>
-                            <div className="col-3">
+                            <div className="col-12 md:col-3" style={{ marginTop: '2%' }}>
                                 <span className="p-float-label" >
                                     <InputNumber style={{ width: '100%' }} value={formik.values.number} useGrouping={false}
                                         onChange={(e) => { setNumberValueValue(e.value!); formik.setFieldValue('number', e.value); console.log(e.value) }}
@@ -301,7 +387,7 @@ export default function Step2NaturalPerson() {
                                     <label htmlFor="numberValue">Número*</label>
                                 </span>
                             </div>
-                            <div className="col-3">
+                            <div className="col-12 md:col-3" style={{ marginTop: '2%' }}>
                                 <span className="p-float-label" >
                                     <Calendar
                                         id='date'
@@ -327,6 +413,8 @@ export default function Step2NaturalPerson() {
                                 </span>
                             </div>
 
+
+
                         </div>
 
                         <div className='grid' style={{ marginTop: '5%' }} >
@@ -337,6 +425,7 @@ export default function Step2NaturalPerson() {
                             <div className='col-1'>
                                 <div className="secondButton">
                                     <Button label="PRÓXIMO" type="submit"
+                                        onClick={SendForm}
 
                                     />
 

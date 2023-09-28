@@ -1,0 +1,10 @@
+@media screen and (max-width: 570px){
+    .personalInfo-tittle{
+        margin-bottom: 8%;
+    }
+}
+
+
+.step2-dropdown .p-dropdown{
+    height: 100% !important;
+}

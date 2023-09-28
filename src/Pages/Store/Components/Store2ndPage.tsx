@@ -60,7 +60,7 @@ export default function Store2ndPage() {
                 break;
 
             case 1:
-                return (<Step2 />)
+                return (<Step2 productId={cardId} setNextStep={setActiveIndex}/>)
                 break;
 
             case 2:
