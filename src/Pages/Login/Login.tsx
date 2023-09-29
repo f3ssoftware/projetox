@@ -4,7 +4,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
-import axios from "axios";
 import { Toast, ToastMessage } from 'primereact/toast'
 import SVGLogo from '../../Shared/img/LogoSVG'
 import Video from '../../Shared/img/PeopleBusiness.mp4'

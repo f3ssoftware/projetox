@@ -3,12 +3,12 @@ import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
-import axios from "axios";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { useFormik } from "formik";
 import { classNames } from "primereact/utils";
 import { CurrencyEnum } from "../../../Shared/enums/CurrencyEnum";
+import httpService from "../../../Shared/HttpHelper/pjx-http.helper";
 
 export default function RecurrencyForm({
   walletId,
@@ -34,7 +34,7 @@ export default function RecurrencyForm({
 
   const asyncNewRecurrency = async () => {
     try {
-      const result = await axios.post(
+      const result = await httpService.post(
         `${process.env.REACT_APP_API_URL}/v1/recurrency/${walletId}`,
         {
           reference: reference,

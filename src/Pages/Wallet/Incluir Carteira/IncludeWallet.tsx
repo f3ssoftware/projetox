@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import './inclusao.css'
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-import axios from "axios";
 import { Toast, ToastMessage } from 'primereact/toast';
 import { Dropdown } from 'primereact/dropdown';
 import { CurrencyEnum } from '../../../Shared/enums/CurrencyEnum';
+import httpService from '../../../Shared/HttpHelper/pjx-http.helper';
 
 
 export default function IncludeWallet({ closeDialog, onSuccess, onError }: { closeDialog: any, onSuccess: Function, onError: Function }) {
@@ -19,7 +19,7 @@ export default function IncludeWallet({ closeDialog, onSuccess, onError }: { clo
 
     const addWallets = async () => {
         try {
-            const result = await axios.post(`${process.env.REACT_APP_API_URL}/v1/wallets`, {
+            const result = await httpService.post(`${process.env.REACT_APP_API_URL}/v1/wallets`, {
                 currency: selectedCurrency,
                 name: text1,
                 createdAt: new Date()

@@ -1,9 +1,9 @@
-import axios from "axios";
 import { Button } from "primereact/button";
 import { ColorPicker, ColorPickerChangeEvent } from "primereact/colorpicker";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { GroupDTO } from "../../../../models/GroupDTO";
+import httpService from "../../../../Shared/HttpHelper/pjx-http.helper";
 
 export default function EditGroup({
     closeDialog,
@@ -25,16 +25,16 @@ export default function EditGroup({
     const addGroups = async (params?: any) => {
 
       try {
-        const result = await axios.get(
+        const result = await httpService.get(
           `${process.env.REACT_APP_API_URL}/v1/groups/detail/${group?.id}`, {
             headers: {
               Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
             },
             params
           });
-          setText1(result.data.name)
-          setText2(result.data.label)
-          setColorHEX(result.data.color)
+          setText1(result!.data.name)
+          setText2(result!.data.label)
+          setColorHEX(result!.data.color)
     
     
         } catch (err) {
@@ -44,7 +44,7 @@ export default function EditGroup({
 
       const ChangeGroup = async () => {
         try {
-            const result = await axios.put(`${process.env.REACT_APP_API_URL}/v1/groups`, {
+            const result = await httpService.put(`${process.env.REACT_APP_API_URL}/v1/groups`, {
                 id: group.id,
                 name: text1,
                 label: text2,

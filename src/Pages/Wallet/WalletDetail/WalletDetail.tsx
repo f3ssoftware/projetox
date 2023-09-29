@@ -1,7 +1,6 @@
 import "../wallet.css";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { InputText } from "primereact/inputtext";
@@ -18,6 +17,7 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import IncludeGroup from "./Dialogs/IncludeGroup";
 import EditGroup from "./Dialogs/editGroup";
 import { GroupDTO } from "../../../models/GroupDTO";
+import httpService from "../../../Shared/HttpHelper/pjx-http.helper";
 
 export default function WalletDetail() {
   const [loading, setLoading] = useState(false);
@@ -46,7 +46,7 @@ export default function WalletDetail() {
 
   const fetchCharts = async (params?: any) => {
     try {
-      const result = await axios.get(
+      const result = await httpService.get(
         `${process.env.REACT_APP_API_URL}/v1/charts/cashflow`,
         {
           headers: {
@@ -55,7 +55,7 @@ export default function WalletDetail() {
           params,
         }
       );
-      setChart(result.data);
+      setChart(result!.data);
     } catch (err) {
       alert(err);
     }
@@ -63,7 +63,7 @@ export default function WalletDetail() {
 
   const walletsInfo = async () => {
     try {
-      const result = await axios.get(
+      const result = await httpService.get(
         `${process.env.REACT_APP_API_URL}/v1/wallets/${selectedWallet?.id}`,
         {
           headers: {
@@ -71,8 +71,8 @@ export default function WalletDetail() {
           },
         }
       );
-      setTransactionVolume(result.data.stats.walletTransactionsVolume);
-      setBalance(result.data.stats.walletBalance);
+      setTransactionVolume(result!.data.stats.walletTransactionsVolume);
+      setBalance(result!.data.stats.walletBalance);
     } catch (err) {
       alert(err);
     }
@@ -81,7 +81,7 @@ export default function WalletDetail() {
   const fetchGroups = async () => {
     try {
       setLoading(true);
-      const result = await axios.get(
+      const result = await httpService.get(
         `${process.env.REACT_APP_API_URL}/v1/groups/${selectedWallet?.id}`,
         {
           headers: {
@@ -90,7 +90,7 @@ export default function WalletDetail() {
         }
       );
       setLoading(false);
-      setGroups(result.data);
+      setGroups(result!.data);
     } catch (err) { }
   };
 

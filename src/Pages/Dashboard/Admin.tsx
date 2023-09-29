@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { Menu } from 'primereact/menu';
 import 'primeicons/primeicons.css';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from "axios";
 import { TabView, TabPanel } from 'primereact/tabview';
 import { Chart } from 'primereact/chart';
 import { Calendar } from 'primereact/calendar';
@@ -11,6 +10,7 @@ import { CurrencyEnum } from '../../Shared/enums/CurrencyEnum';
 import { Period } from '../../Shared/enums/Period';
 import { Year } from '../../Shared/enums/Year';
 import { Dropdown } from 'primereact/dropdown';
+import httpService from '../../Shared/HttpHelper/pjx-http.helper';
 
 
 export default function Dashboard() {
@@ -42,7 +42,7 @@ export default function Dashboard() {
 
     const fetchCashOut = async (params?: any) => {
         try {
-            const result = await axios.get(
+            const result = await httpService.get(
                 `${process.env.REACT_APP_API_URL}/v1/charts/cash-out`,
                 {
                     headers: {
@@ -51,9 +51,9 @@ export default function Dashboard() {
                     params
                 }
             );
-            setChartOut(result.data);
-            console.log(result.data)
-            chartCashOut(params.currency, params.days_gone, result.data);
+            setChartOut(result!.data);
+            console.log(result!.data)
+            chartCashOut(params.currency, params.days_gone, result!.data);
 
 
         } catch (err) {
@@ -63,7 +63,7 @@ export default function Dashboard() {
 
     const fetchCashIn = async (params?: any) => {
         try {
-            const result = await axios.get(
+            const result = await httpService.get(
                 `${process.env.REACT_APP_API_URL}/v1/charts/cash-in`,
                 {
                     headers: {
@@ -72,8 +72,8 @@ export default function Dashboard() {
                     params
                 }
             );
-            setChartIn(result.data);
-            chartCashIn(params.currency, params.period, result.data);
+            setChartIn(result!.data);
+            chartCashIn(params.currency, params.period, result!.data);
 
         } catch (err) {
             alert(err);
@@ -82,7 +82,7 @@ export default function Dashboard() {
 
     const fetchCashflow = async (params?: any) => {
         try {
-            const result = await axios.get(
+            const result = await httpService.get(
                 `${process.env.REACT_APP_API_URL}/v1/charts/cashflow`,
                 {
                     headers: {
@@ -91,8 +91,8 @@ export default function Dashboard() {
                     params,
                 }
             );
-            setCashflow(result.data);
-            chartCashflow(params.currency, params.days_gone, result.data);
+            setCashflow(result!.data);
+            chartCashflow(params.currency, params.days_gone, result!.data);
         } catch (err) {
             alert(err);
         }
@@ -100,7 +100,7 @@ export default function Dashboard() {
 
     const fetchProfitability = async (params?: any) => {
         try {
-            const result = await axios.get(
+            const result = await httpService.get(
                 `${process.env.REACT_APP_API_URL}/v1/charts/profit`,
                 {
                     headers: {
@@ -109,8 +109,8 @@ export default function Dashboard() {
                     params,
                 }
             );
-            setProfitability(result.data);
-            chartProfitability(result.data)
+            setProfitability(result!.data);
+            chartProfitability(result!.data)
 
         } catch (err) {
             alert(err);
@@ -119,7 +119,7 @@ export default function Dashboard() {
 
     const fetchCurrencyStats = async (params?: any) => {
         try {
-            const result = await axios.get(
+            const result = await httpService.get(
                 `${process.env.REACT_APP_API_URL}/v1/charts/currency-stats`,
                 {
                     headers: {
@@ -129,11 +129,11 @@ export default function Dashboard() {
                 }
             );
 
-            setCashIn(result.data.cashinAmount)
-            setCashOut(result.data.cashoutAmount)
+            setCashIn(result!.data.cashinAmount)
+            setCashOut(result!.data.cashoutAmount)
            
-            setFutureCashIn(result.data.futureCashin)
-            setFutureCashOut(result.data.futureCashout)
+            setFutureCashIn(result!.data.futureCashin)
+            setFutureCashOut(result!.data.futureCashout)
 
         } catch (err) {
             alert(err);

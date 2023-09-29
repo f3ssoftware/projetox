@@ -3,12 +3,12 @@ import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
-import axios from "axios";
 import { Button } from "primereact/button";
 import { WalletDto } from "../../../models/wallet.dto";
 import { useFormik } from "formik";
 import { classNames } from "primereact/utils";
 import { CurrencyEnum } from "../../../Shared/enums/CurrencyEnum";
+import httpService from "../../../Shared/HttpHelper/pjx-http.helper";
 
 export default function InterForm({
   walletId,
@@ -34,7 +34,7 @@ export default function InterForm({
 
   const fetchWallets = async () => {
     try {
-      const result = await axios.get(
+      const result = await httpService.get(
         `${process.env.REACT_APP_API_URL}/v1/wallets`,
         {
           headers: {
@@ -42,7 +42,7 @@ export default function InterForm({
           },
         }
       );
-      setWallets(result.data);
+      setWallets(result!.data);
     } catch (err) {
       alert(err);
     }
@@ -54,7 +54,7 @@ export default function InterForm({
 
   const asyncNewInterWallet = async () => {
     try {
-      const result = await axios.post(
+      const result = await httpService.post(
         `${process.env.REACT_APP_API_URL}/v1/transactions/inter-wallet`,
         {
           reference: reference,

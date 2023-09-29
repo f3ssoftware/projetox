@@ -6,12 +6,12 @@ import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
 import { WalletDto } from '../../models/wallet.dto';
 import { Button } from 'primereact/button';
-import axios from 'axios';
 import { SplitButton } from 'primereact/splitbutton';
 import { MenuItem } from 'primereact/menuitem';
 import { Dialog } from 'primereact/dialog';
 import PaymentAction from './Components/PaymentAction';
 import { Toast, ToastMessage } from 'primereact/toast';
+import httpService from "../../Shared/HttpHelper/pjx-http.helper";
 
 export default function Due_Dated() {
 
@@ -45,7 +45,7 @@ export default function Due_Dated() {
 
   const fetchWallets = async () => {
     try {
-      const result = await axios.get(
+      const result = await httpService.get(
         `${process.env.REACT_APP_API_URL}/v1/wallets`,
         {
           headers: {
@@ -53,9 +53,9 @@ export default function Due_Dated() {
           },
         }
       );
-      setWallets(result.data);
+      setWallets(result!.data);
       // setSelectedWallet(result.data)
-      setSelectedWallet(result.data[0])
+      setSelectedWallet(result!.data[0])
 
     } catch (err) {
       alert(err);
@@ -75,15 +75,15 @@ export default function Due_Dated() {
   const fetchTransactions = async (params?: any) => {
 
     try {
-      var result = await axios.get(`${process.env.REACT_APP_API_URL}/v1/transactions/${selectedWallet?.id}`, {
+      var result = await httpService.get(`${process.env.REACT_APP_API_URL}/v1/transactions/${selectedWallet?.id}`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
         },
         params
       });
 
-      setTransactions(result.data)
-      console.log(transactions, result.data)
+      setTransactions(result!.data)
+      console.log(transactions, result!.data)
 
 
     } catch (err) {

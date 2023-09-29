@@ -5,8 +5,8 @@ import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 import { Toast, ToastMessage } from 'primereact/toast'
-import axios from "axios";
 import Video from '../../Shared/img/PeopleBusiness.mp4'
+import httpService from "../../Shared/HttpHelper/pjx-http.helper";
 
 
 function EmailRegister() {
@@ -31,7 +31,7 @@ function EmailRegister() {
 
             if (password === confirmationPassword) {
                 try {
-                    const result = await axios.post(`${process.env.REACT_APP_API_URL}/v1/users`, {
+                    const result = await httpService.post(`${process.env.REACT_APP_API_URL}/v1/users`, {
 
                         email: user,
                         password: password,
