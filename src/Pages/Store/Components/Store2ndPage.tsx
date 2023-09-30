@@ -7,20 +7,18 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { MenuItem } from 'primereact/menuitem';
 import { Steps } from 'primereact/steps';
 import { Toast, ToastMessage } from 'primereact/toast';
-import Step1 from './Step1'
-import Step2 from './Step2'
-import Step3 from './Step3'
+import Step1 from './Step1/Step1'
+import Step2 from './Step2/Step2'
+import Step3 from './Step3/Step3'
 
 
 export default function Store2ndPage() {
 
     let { cardId } = useParams();
-    const [value1, setValue1] = useState(0);
-    const [value2, setValue2] = useState(0);
-    const [value3, setValue3] = useState(0);
     let [activeIndex, setActiveIndex] = useState(0);
     const toast = useRef<Toast>(null);
-    let navigate = useNavigate();
+    const [step2BodyInfo, setStep2BodyInfo] = useState<any>();
+    const [paymentMethod, setPaymentMethod] = useState<any>();
 
     const showToast = (
         severity: ToastMessage["severity"],
@@ -60,12 +58,12 @@ export default function Store2ndPage() {
                 break;
 
             case 1:
-                return (<Step2 productId={cardId} setNextStep={setActiveIndex}/>)
+                return (<Step2 productId={cardId} setNextStep={setActiveIndex} step2Body={setStep2BodyInfo} setPaymentChosed={setPaymentMethod} />)
                 break;
 
             case 2:
 
-                return (<Step3 />)
+                return (<Step3 formBody={step2BodyInfo} paymentMethod={paymentMethod}/>)
                 break;
             default:
 

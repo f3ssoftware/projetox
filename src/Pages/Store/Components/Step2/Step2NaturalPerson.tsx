@@ -8,13 +8,13 @@ import { Toast, ToastMessage } from 'primereact/toast';
 import { classNames } from "primereact/utils";
 import * as Yup from 'yup';
 import { InputMask, InputMaskChangeEvent } from 'primereact/inputmask';
-import { BrazilState } from '../../../Shared/enums/BrazilState';
+import { BrazilState } from '../../../../Shared/enums/BrazilState';
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { InputNumber, InputNumberValueChangeEvent } from "primereact/inputnumber";
 import { RadioButton, RadioButtonChangeEvent } from 'primereact/radiobutton';
 import "./Step2.css"
 
-export default function Step2NaturalPerson({ personChosed, changeStep, paymentMethod, productId }: { personChosed: string, changeStep: any, paymentMethod: any, productId: any }) {
+export default function Step2NaturalPerson({ personChosed, changeStep, paymentMethod, productId, step2Body }: { personChosed: any, changeStep: any, paymentMethod: any, productId: any, step2Body: any }) {
 
 
     const [nameValue, setNameValue] = useState('');
@@ -29,10 +29,12 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
     const [numberValue, setNumberValueValue] = useState<number>(undefined!);
     const [birthday, setBirthday] = useState('');
     const categories = [
-        { sex: 'Masculino', key: 'M' },
-        { sex: 'Feminino', key: 'F' },
+        { sex: 'Masculino', key: 'male' },
+        { sex: 'Feminino', key: 'female' },
 
     ];
+
+   
     const [selectedCategory, setSelectedCategory] = useState<any>(categories[0]);
     const toast = useRef<Toast>(null);
     const brazilStates: BrazilState[] = Object.values(BrazilState);
@@ -42,51 +44,61 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
     };
 
     const SendForm = async () => {
-        try {
-            await axios.post(
-                `${process.env.REACT_APP_API_URL}/v1/checkout`,
-                {
-                    payment_method: paymentMethod.key,
-                    customer: {
-                        name: nameValue,
-                        email: emailValue,
-                        phone_number: {
-                            country_code: telphoneValue[0] + telphoneValue[1],
-                            area_code: telphoneValue[2] + telphoneValue[3],
-                            number: telphoneValue.slice(4, 13)
-                        },
-
-                        document: SSN,
-                        document_type: 'CPF',
-                        type: personChosed,
-                        address: {
-                            zipcode: postalCodelValue,
-                            state: stateValue,
-                            city: countyValue,
-                            district: neighborhoodValue,
-                            address: publicPlaceValue,
-                            number: numberValue,
-                            country: '55'
-                        },
-                        birthDate: birthday,
-                        gender: selectedCategory
-                    },
-                    products: [productId]
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${sessionStorage.getItem("access_token")!}`,
-                    },
+        
+        const body = {
+            payment_method: paymentMethod.key,
+            customer: {
+                name: nameValue,
+                email: emailValue,
+                phone_number: {
+                    country_code: telphoneValue[0] + telphoneValue[1],
+                    area_code: telphoneValue[2] + telphoneValue[3],
+                    number: telphoneValue.slice(4, 13)
                 },
 
-            );
-            showStepToast("success", "Successo", "Transação incluida com sucesso");
-            changeStep(3);
+                document: SSN,
+                document_type: 'CPF',
+                type: personChosed.key,
+                address: {
+                    zipcode: postalCodelValue,
+                    state: stateValue,
+                    city: countyValue,
+                    district: neighborhoodValue,
+                    address: publicPlaceValue,
+                    number: numberValue,
+                    country: '55'
+                },
+                birthDate: birthday,
+                gender: selectedCategory.key,
+            },
+            products: [productId]
+        };
 
-        } catch (err) {
-            err = 400
-                ? (showStepToast("error", "Erro", "Preencha os campos obrigatórios"))
-                : showStepToast("error", "Erro", "" + err);
+        if (paymentMethod.key == 'pix') {
+            try {
+                await axios.post(
+                    `${process.env.REACT_APP_API_URL}/v1/checkout`,
+                    body,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${sessionStorage.getItem("access_token")!}`,
+                        },
+                    },
+
+                );
+                showStepToast("success", "Successo", "Transação incluida com sucesso");
+                changeStep(2);
+
+
+            } catch (err) {
+                err = 400
+                    ? (showStepToast("error", "Erro", "Preencha os campos obrigatórios"))
+                    : showStepToast("error", "Erro", "" + err);
+            }
+        }
+
+        else if(paymentMethod.key == 'credit_card'){
+            step2Body(body);
         }
     };
 
@@ -118,10 +130,8 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
         }
     }, [postalCodelValue]);
 
-    useEffect(() => {
-        console.log(paymentMethod.key)
 
-    }, [paymentMethod])
+
 
     return (
         <div>
@@ -179,7 +189,7 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
 
                         <div className="grid">
                             <div className="col-12" >
-                                <h4 style={{}}>Sexo</h4>
+                                <h4>Sexo</h4>
                             </div>
                             <div className="col-12">
 
@@ -425,7 +435,7 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
                             <div className='col-1'>
                                 <div className="secondButton">
                                     <Button label="PRÓXIMO" type="submit"
-                                        onClick={SendForm}
+                                        onClick={() => SendForm()}
 
                                     />
 

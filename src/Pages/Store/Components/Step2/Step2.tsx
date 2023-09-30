@@ -1,6 +1,5 @@
 import { Button } from "primereact/button";
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
-// import { Dropdown } from "primereact/dropdown";
 import { useEffect, useState } from "react";
 import { RadioButton, RadioButtonChangeEvent } from 'primereact/radiobutton';
 import Step2Form from "./Step2NaturalPerson";
@@ -9,43 +8,54 @@ import Step2LegalPerson from "./Step2LegalPerson";
 import "./Step2.css"
 
 
-export default function Step2({ setNextStep, productId }: { setNextStep: any, productId: any }) {
+export default function Step2({ setNextStep, productId, step2Body, setPaymentChosed }: { setNextStep: any, productId: any, step2Body: any, setPaymentChosed:any }) {
 
     const [personChosed, setPersonChosed] = useState<any>('');
     const categories = [
         { name: 'Pix', key: 'pix' },
         { name: 'Credit Card', key: 'credit_card' }
     ];
-    const personType = [
-        { name: 'Pessoa Física' },
-        { name: 'Pessoa Jurídica' }
+    const personType: any = [
+        { name: 'Pessoa Física', key: 'individual' },
+        { name: 'Pessoa Jurídica', key: 'company' }
     ];
     const [selectedCategory, setSelectedCategory] = useState<any>(categories[0]);
 
     const RenderingPage = () => {
         switch (personChosed.name) {
             case 'Pessoa Física':
+
+
                 return (
 
-                    <Step2NaturalPerson personChosed={personChosed} changeStep={setNextStep} paymentMethod={selectedCategory} productId={productId} />
+                    <Step2NaturalPerson personChosed={personChosed} changeStep={setNextStep} paymentMethod={selectedCategory} productId={productId} step2Body={step2Body} />
 
                 )
                 break;
 
             case 'Pessoa Jurídica':
-                return (<Step2LegalPerson personChosed={personChosed} changeStep={setNextStep} paymentMethod={selectedCategory} productId={productId}/>)
+                return (
+
+                    <Step2LegalPerson personChosed={personChosed} changeStep={setNextStep} paymentMethod={selectedCategory} productId={productId} step2Body={step2Body} />
+
+                )
                 break;
 
             default:
 
-                console.log(personChosed.name)
+
                 return (<></>)
         }
     }
 
-    useEffect(() => {
-        console.log(personChosed);
-    }, []);
+    
+    const updatePaymentType = (params:any) => {
+        setSelectedCategory(params)
+        setPaymentChosed(params.key)
+        console.log(params.key)
+    }
+   
+    
 
 
 
@@ -53,14 +63,14 @@ export default function Step2({ setNextStep, productId }: { setNextStep: any, pr
 
         <div className="grid">
             <div className="col-12">
-                
+
                 <h4 style={{ marginBottom: '3%', fontSize: '20px' }}>Escolha um Método de Pagamento</h4>
 
 
                 {categories.map((category) => {
                     return (
                         <div key={category.key} className="flex align-items-center" style={{ marginBottom: '1%' }}>
-                            <RadioButton inputId={category.key} name="category" value={category} onChange={(e: RadioButtonChangeEvent) => setSelectedCategory(e.value)} checked={selectedCategory.key === category.key} />
+                            <RadioButton inputId={category.key} name="category" value={category} checked={selectedCategory.key === category.key} onChange={(e: RadioButtonChangeEvent) => {updatePaymentType(e.value)}}  />
                             <label htmlFor={category.key} className="ml-2">{category.name}</label>
                         </div>
                     );

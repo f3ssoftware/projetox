@@ -8,13 +8,12 @@ import { Toast, ToastMessage } from 'primereact/toast';
 import { classNames } from "primereact/utils";
 import * as Yup from 'yup';
 import { InputMask, InputMaskChangeEvent } from 'primereact/inputmask';
-import { BrazilState } from '../../../Shared/enums/BrazilState';
+import { BrazilState } from '../../../../Shared/enums/BrazilState';
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { InputNumber, InputNumberValueChangeEvent } from "primereact/inputnumber";
-import { RadioButton, RadioButtonChangeEvent } from 'primereact/radiobutton';
 
 export default function Step2NaturalPerson(
-    { personChosed, changeStep, paymentMethod, productId }: { personChosed: string, changeStep: any, paymentMethod: any, productId: any }
+    { personChosed, changeStep, paymentMethod, productId, step2Body }: { personChosed: any, changeStep: any, paymentMethod: any, productId: any, step2Body: any }
 ) {
 
 
@@ -31,6 +30,7 @@ export default function Step2NaturalPerson(
     const [birthday, setBirthday] = useState('');
     const toast = useRef<Toast>(null);
     const brazilStates: BrazilState[] = Object.values(BrazilState);
+    const [cardBody, setCardBody] = useState<any>()
 
     const showStepToast = (severity: ToastMessage["severity"], summary: string, detail: string) => {
         toast.current?.show([{ severity, summary, detail }]);
@@ -38,53 +38,70 @@ export default function Step2NaturalPerson(
     };
 
     const SendForm = async () => {
-        try {
-            await axios.post(
-                `${process.env.REACT_APP_API_URL}/v1/checkout`,
-                {
-                    payment_method: paymentMethod.key,
-                    customer: {
-                        name: nameValue,
-                        email: emailValue,
-                        phone_number: {
-                            country_code: telphoneValue[0] + telphoneValue[1],
-                            area_code: telphoneValue[2] + telphoneValue[3],
-                            number: telphoneValue.slice(4, 13)
-                        },
-
-                        document: EIN,
-                        document_type: 'CPF',
-                        type: personChosed,
-                        address: {
-                            zipcode: postalCodelValue,
-                            state: stateValue,
-                            city: countyValue,
-                            district: neighborhoodValue,
-                            address: publicPlaceValue,
-                            number: numberValue,
-                            country: '55'
-                        },
-                        birthDate: birthday,
-
-                    },
-                    products: [productId]
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${sessionStorage.getItem("access_token")!}`,
-                    },
+        const body = {
+            payment_method: paymentMethod.key,
+            customer: {
+                name: nameValue,
+                email: emailValue,
+                phone_number: {
+                    country_code: telphoneValue[0] + telphoneValue[1],
+                    area_code: telphoneValue[2] + telphoneValue[3],
+                    number: telphoneValue.slice(4, 13)
                 },
 
-            );
-            showStepToast("success", "Successo", "Transação incluida com sucesso");
-            changeStep(3);
+                document: EIN,
+                document_type: 'CPF',
+                type:
+                    personChosed.key,
 
-        } catch (err) {
-            err = 400
-                ? (showStepToast("error", "Erro", "Preencha os campos obrigatórios"))
-                : showStepToast("error", "Erro", "" + err);
+                address: {
+                    zipcode: postalCodelValue,
+                    state: stateValue,
+                    city: countyValue,
+                    district: neighborhoodValue,
+                    address: publicPlaceValue,
+                    number: numberValue,
+                    country: '55'
+                },
+                birthDate: birthday,
+                gender: 'male'
+
+            },
+            products: [productId]
+        };
+
+        step2Body(body);
+
+        if (paymentMethod.key == 'pix') {
+            try {
+                await axios.post(
+                    `${process.env.REACT_APP_API_URL}/v1/checkout`,
+                    body,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${sessionStorage.getItem("access_token")!}`,
+                        },
+                    },
+
+                );
+                showStepToast("success", "Successo", "Transação incluida com sucesso");
+                changeStep(2);
+
+            } catch (err) {
+                err = 400
+                    ? (showStepToast("error", "Erro", "Preencha os campos obrigatórios"))
+                    : showStepToast("error", "Erro", "" + err);
+            }
+
+        }
+
+        else if(paymentMethod.key == 'credit_card'){
+            setCardBody(body);
+            changeStep(2);
         }
     };
+
+
 
     let maxDate = new Date();
     const checkPostalCode = async () => {
@@ -113,9 +130,6 @@ export default function Step2NaturalPerson(
         }
     }, [postalCodelValue]);
 
-    // useEffect(() => {
-    //     console.log(brazilStates);
-    // }, []);
 
 
 
