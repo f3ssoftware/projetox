@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import './Store2ndPage.css'
 import "primeicons/primeicons.css";
 import './StoreMainPage.css'
@@ -70,6 +70,10 @@ export default function Store2ndPage() {
                 return (<></>)
         }
     }
+
+    useEffect(() => {
+        console.log(paymentMethod)
+    }, [paymentMethod])
 
 
     return (

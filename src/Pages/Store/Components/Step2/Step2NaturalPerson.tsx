@@ -14,7 +14,7 @@ import { InputNumber, InputNumberValueChangeEvent } from "primereact/inputnumber
 import { RadioButton, RadioButtonChangeEvent } from 'primereact/radiobutton';
 import "./Step2.css"
 
-export default function Step2NaturalPerson({ personChosed, changeStep, paymentMethod, productId, step2Body }: { personChosed: any, changeStep: any, paymentMethod: any, productId: any, step2Body: any }) {
+export default function Step2NaturalPerson({ personChosed, changeStep, paymentMethod, productId, step2Body, setPayment3Step }: { personChosed: any, changeStep: any, paymentMethod: any, productId: any, step2Body: any, setPayment3Step:any }) {
 
 
     const [nameValue, setNameValue] = useState('');
@@ -435,7 +435,7 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
                             <div className='col-1'>
                                 <div className="secondButton">
                                     <Button label="PRÓXIMO" type="submit"
-                                        onClick={() => SendForm()}
+                                        onClick={() => {SendForm(); setPayment3Step(paymentMethod.key); console.log(paymentMethod.key)}}
 
                                     />
 

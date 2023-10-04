@@ -13,7 +13,7 @@ import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { InputNumber, InputNumberValueChangeEvent } from "primereact/inputnumber";
 
 export default function Step2NaturalPerson(
-    { personChosed, changeStep, paymentMethod, productId, step2Body }: { personChosed: any, changeStep: any, paymentMethod: any, productId: any, step2Body: any }
+    { personChosed, changeStep, paymentMethod, productId, step2Body, setPayment3Step }: { personChosed: any, changeStep: any, paymentMethod: any, productId: any, step2Body: any, setPayment3Step:any }
 ) {
 
 
@@ -406,7 +406,7 @@ export default function Step2NaturalPerson(
                             <div className='col-1'>
                                 <div className="secondButton">
                                     <Button label="PRÓXIMO" type="submit"
-                                        onClick={() => SendForm()}
+                                        onClick={() => {SendForm(); setPayment3Step(paymentMethod.key); console.log(paymentMethod.key)}}
 
                                     />
 

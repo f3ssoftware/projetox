@@ -15,11 +15,12 @@ export default function Step2({ setNextStep, productId, step2Body, setPaymentCho
         { name: 'Pix', key: 'pix' },
         { name: 'Credit Card', key: 'credit_card' }
     ];
+    const [selectedCategory, setSelectedCategory] = useState<any>(categories[0]);
     const personType: any = [
         { name: 'Pessoa Física', key: 'individual' },
         { name: 'Pessoa Jurídica', key: 'company' }
     ];
-    const [selectedCategory, setSelectedCategory] = useState<any>(categories[0]);
+    
 
     const RenderingPage = () => {
         switch (personChosed.name) {
@@ -28,7 +29,7 @@ export default function Step2({ setNextStep, productId, step2Body, setPaymentCho
 
                 return (
 
-                    <Step2NaturalPerson personChosed={personChosed} changeStep={setNextStep} paymentMethod={selectedCategory} productId={productId} step2Body={step2Body} />
+                    <Step2NaturalPerson personChosed={personChosed} changeStep={setNextStep} paymentMethod={selectedCategory} productId={productId} step2Body={step2Body} setPayment3Step = {setPaymentChosed} />
 
                 )
                 break;
@@ -36,7 +37,7 @@ export default function Step2({ setNextStep, productId, step2Body, setPaymentCho
             case 'Pessoa Jurídica':
                 return (
 
-                    <Step2LegalPerson personChosed={personChosed} changeStep={setNextStep} paymentMethod={selectedCategory} productId={productId} step2Body={step2Body} />
+                    <Step2LegalPerson personChosed={personChosed} changeStep={setNextStep} paymentMethod={selectedCategory} productId={productId} step2Body={step2Body} setPayment3Step = {setPaymentChosed}/>
 
                 )
                 break;
@@ -51,11 +52,8 @@ export default function Step2({ setNextStep, productId, step2Body, setPaymentCho
     
     const updatePaymentType = (params:any) => {
         setSelectedCategory(params)
-        setPaymentChosed(params.key)
-        console.log(params.key)
     }
-   
-    
+
 
 
 

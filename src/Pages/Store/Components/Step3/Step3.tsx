@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import Card from './Card';
 import Pix from './Pix'
 
@@ -26,6 +27,9 @@ export default function Step3({ formBody, paymentMethod }: { formBody:any, payme
         }
     }
 
+    useEffect(() => {
+        console.log(paymentMethod);
+    }, [paymentMethod])
 
     return (
 
