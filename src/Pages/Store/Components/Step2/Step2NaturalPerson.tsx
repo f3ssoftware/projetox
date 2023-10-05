@@ -74,6 +74,8 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
             products: [productId]
         };
 
+        step2Body(body);
+        
         if (paymentMethod.key == 'pix') {
             try {
                 await axios.post(
@@ -99,6 +101,7 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
 
         else if(paymentMethod.key == 'credit_card'){
             step2Body(body);
+            changeStep(2);
         }
     };
 

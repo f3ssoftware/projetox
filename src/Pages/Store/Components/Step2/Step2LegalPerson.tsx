@@ -96,7 +96,7 @@ export default function Step2NaturalPerson(
         }
 
         else if(paymentMethod.key == 'credit_card'){
-            setCardBody(body);
+            step2Body(body);
             changeStep(2);
         }
     };
