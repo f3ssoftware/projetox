@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import Card from './Card';
 import Pix from './Pix'
 
-export default function Step3({ formBody, paymentMethod }: { formBody: any, paymentMethod: any }) {
+export default function Step3({ formBody, paymentMethod, setInitialStep }: { formBody: any, paymentMethod: any, setInitialStep:any }) {
 
 
 
@@ -15,15 +15,9 @@ export default function Step3({ formBody, paymentMethod }: { formBody: any, paym
                 break;
 
             case 'credit_card':
-                return (
-                    <div>                
-                        <div className='grid'>
-                        <div className='col-2'>
-                            <h4 style={{ marginBottom: '3%', fontSize: '20px' }}>Pagamento com Cartão de Crédit</h4>
-                        </div>
-                        <Card formBody={formBody} />
-                    </div>
-                    </div>
+                return(      
+                  <Card formBody={formBody} setInitialStep={setInitialStep} />
+                    
 
                 )
                 break;
@@ -35,9 +29,9 @@ export default function Step3({ formBody, paymentMethod }: { formBody: any, paym
         }
     }
 
-    // useEffect(() => {
-    //     console.log(paymentMethod);
-    // }, [paymentMethod])
+    useEffect(() => {
+        console.log(paymentMethod);
+    }, [paymentMethod])
 
     return (
 

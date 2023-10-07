@@ -90,6 +90,7 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
                 );
                 showStepToast("success", "Successo", "Transação incluida com sucesso");
                 changeStep(2);
+                setPayment3Step(paymentMethod.key)
 
 
             } catch (err) {
@@ -99,9 +100,10 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
             }
         }
 
-        else if(paymentMethod.key == 'credit_card'){
+        else if(paymentMethod.key == 'credit_card' && (nameValue && emailValue && SSN && postalCodelValue && stateValue && neighborhoodValue && publicPlaceValue && numberValue && birthday)){
             step2Body(body);
             changeStep(2);
+            setPayment3Step(paymentMethod.key)
         }
     };
 
@@ -175,15 +177,11 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
                 })}
 
                 onSubmit={(values, { setSubmitting }) => {
-
                     setTimeout(() => {
-                        alert(JSON.stringify(values, null, 2));
-
-                        setSubmitting(true);
+                      alert(JSON.stringify(values, null, 2));
+                      setSubmitting(false);
                     }, 400);
-
-                }}
-
+                  }}
 
             >
                 {formik => (
@@ -438,7 +436,7 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
                             <div className='col-1'>
                                 <div className="secondButton">
                                     <Button label="PRÓXIMO" type="submit"
-                                        onClick={() => {SendForm(); setPayment3Step(paymentMethod.key); console.log(paymentMethod.key)}}
+                                        onClick={() => SendForm()}
 
                                     />
 

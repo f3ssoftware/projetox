@@ -63,7 +63,7 @@ export default function Store2ndPage() {
 
             case 2:
 
-                return (<Step3 formBody={step2BodyInfo} paymentMethod={paymentMethod}/>)
+                return (<Step3 formBody={step2BodyInfo} paymentMethod={paymentMethod} setInitialStep={setActiveIndex}/>)
                 break;
             default:
 
@@ -71,9 +71,9 @@ export default function Store2ndPage() {
         }
     }
 
-    useEffect(() => {
-        console.log(paymentMethod)
-    }, [paymentMethod])
+    // useEffect(() => {
+    //     console.log(paymentMethod)
+    // }, [paymentMethod])
 
 
     return (
