@@ -13,7 +13,8 @@ import * as Yup from 'yup';
 export default function Card({ formBody, setInitialStep }: { formBody: any, setInitialStep:any }) {
 
     const [name, setName] = useState('');
-    const [cardNumber, setCardNumber] = useState<number>();
+    const [cardNumber, setCardNumber] = useState('');
+    const [installment, setInstallment] = useState<number>();
     const [date, setDate] = useState('');
     const [cvv, setCvv] = useState('');
 
@@ -28,12 +29,17 @@ export default function Card({ formBody, setInitialStep }: { formBody: any, setI
         
         const body = {
             formBody,
-
+            card: {
+                card_name: name,
+                card_number: cardNumber,
+                exp_month: date[0] + date[1],
+                exp_year: date[2] + date[3],
+                cvv: cvv,
+                installments: 0
+            }
 
                 };
-            
-
-        
+ 
   
             try {
                 await axios.post(
@@ -62,7 +68,7 @@ export default function Card({ formBody, setInitialStep }: { formBody: any, setI
             <Formik
 
 
-                initialValues={{ name: '', number: '', date: '', cvv: '' }}
+                initialValues={{ name: '', number: '', date: '',installment: '', cvv: '' }}
                 validationSchema={Yup.object({
 
                     name: Yup.string()
@@ -71,8 +77,10 @@ export default function Card({ formBody, setInitialStep }: { formBody: any, setI
                         .required('Necessário preencher'),
                     date: Yup.string()
                         .required('Necessário preencher'),
-                    cvv: Yup.number()
-
+                    installment: Yup.number()
+                        .required('Necessário preencher'),
+                      
+                    cvv: Yup.string()
                         .required('Necessário preencher'),
 
 
@@ -97,7 +105,7 @@ export default function Card({ formBody, setInitialStep }: { formBody: any, setI
                         <div className='grid'>
                             <div className='col-12'>
                                 <h4 style={{ marginBottom: '2%', fontSize: '20px' }}>Pagamento com Cartão de Crédito</h4>
-                             </div>
+                               </div>
 
                             <div className="grid" style={{ marginBottom: '2%', width: '100%' }}>
                                 <div className="col-12 md:col-4" style={{ marginTop: '2%' }}>
@@ -124,9 +132,8 @@ export default function Card({ formBody, setInitialStep }: { formBody: any, setI
                                 </div>
                                 <div className="col-12 md:col-4" style={{ marginTop: '2%' }}>
                                     <span className="p-float-label" >
-                                        <InputNumber
-                                            id="cardNumber" name='cardNumber' style={{ width: '100%' }} onChange={(e) => { setCardNumber(e.value!); formik.setFieldValue("number", e.value) }}
-                                            useGrouping={false}
+                                        <InputText
+                                            id="cardNumber" name='cardNumber' onChange={(e) => { setCardNumber(e.target.value); formik.setFieldValue("number", e.target.value) }}
 
                                             className={classNames({
                                                 "p-invalid": formik.touched.number && formik.errors.number,
@@ -158,6 +165,23 @@ export default function Card({ formBody, setInitialStep }: { formBody: any, setI
                                 </div>
 
                                 <div className="col-6 md:col-2" style={{ marginTop: '2%' }}>
+                                    <span className="p-float-label" >
+                                        <InputNumber
+                                            id="installment" name='installment' style={{ width: '100%' }} onChange={(e) => { setInstallment(e.value!); formik.setFieldValue("installment", e.value) }}
+                                            useGrouping={false}
+
+                                            className={classNames({
+                                                "p-invalid": formik.touched.number && formik.errors.number,
+                                            })} />
+
+                                        {formik.touched.number && formik.errors.number ? (
+                                            <div style={{ color: 'red', fontSize: '12px', fontFamily: 'Roboto' }}>{formik.errors.number}</div>
+                                        ) : null}
+                                        <label htmlFor="cardNumber" style={{fontSize:'14px'}}>Parcelamento</label>
+                                    </span>
+                                </div>
+
+                                <div className="col-12 md:col-2" style={{ marginTop: '2%' }}>
                                     <span className="p-float-label" >
                                         <InputText
                                             id="cvv" name='cvv' style={{ width: '100%' }} onChange={(e) => { setCvv(e.target.value); formik.setFieldValue("cvv", e.target.value) }}
