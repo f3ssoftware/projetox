@@ -19,7 +19,9 @@ export default function Store2ndPage() {
     const toast = useRef<Toast>(null);
     const [step2BodyInfo, setStep2BodyInfo] = useState<any>();
     const [paymentMethod, setPaymentMethod] = useState<any>();
-    const [pixResult, setPixResult] = useState('');
+    const [pixResult, setPixResult] = useState(''); //url for QR Code
+    const [pixCopyPaste, setPixCopyPaste] = useState('');
+    
 
     const showToast = (
         severity: ToastMessage["severity"],
@@ -59,12 +61,12 @@ export default function Store2ndPage() {
                 break;
 
             case 1:
-                return (<Step2 productId={cardId} setNextStep={setActiveIndex} step2Body={setStep2BodyInfo} setPaymentChosed={setPaymentMethod} pixImg={setPixResult} />)
+                return (<Step2 productId={cardId} setNextStep={setActiveIndex} step2Body={setStep2BodyInfo} setPaymentChosed={setPaymentMethod} pixImg={setPixResult} pixCopyPaste={setPixCopyPaste} />)
                 break;
 
             case 2:
 
-                return (<Step3 formBody={step2BodyInfo} paymentMethod={paymentMethod} productId={cardId} pixImg={pixResult}/>)
+                return (<Step3 formBody={step2BodyInfo} paymentMethod={paymentMethod} productId={cardId} pixImg={pixResult} pixCopyPasteUrl={pixCopyPaste}/>)
                 break;
             default:
 

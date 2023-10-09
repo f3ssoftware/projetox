@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import Card from './Card';
 import Pix from './Pix'
 
-export default function Step3({ formBody, paymentMethod, productId, pixImg }: { formBody: any, paymentMethod: any, productId: any, pixImg:any }) {
+export default function Step3({ formBody, paymentMethod, productId, pixImg, pixCopyPasteUrl }: { formBody: any, paymentMethod: any, productId: any, pixImg:any, pixCopyPasteUrl:any }) {
 
 
 
@@ -10,7 +10,7 @@ export default function Step3({ formBody, paymentMethod, productId, pixImg }: { 
         switch (paymentMethod) {
             case 'pix':
                 return (
-                    <Pix pixImg={pixImg}/>
+                    <Pix pixImg={pixImg} pixCopyPasteUrl={pixCopyPasteUrl}/>
                 )
                 break;
 

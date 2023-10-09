@@ -8,7 +8,7 @@ import { Toast, ToastMessage } from "primereact/toast";
 import { classNames } from "primereact/utils";
 import { useEffect, useRef, useState } from "react";
 import * as Yup from 'yup';
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 
 export default function Card({ formBody, productId }: { formBody: any, productId:any }) {

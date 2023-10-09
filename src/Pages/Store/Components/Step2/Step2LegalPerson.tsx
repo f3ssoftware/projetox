@@ -14,7 +14,7 @@ import { InputNumber, InputNumberValueChangeEvent } from "primereact/inputnumber
 import { useNavigate } from "react-router-dom";
 
 export default function Step2NaturalPerson(
-    { personChosed, changeStep, paymentMethod, productId, step2Body, setPayment3Step, pixImg }: { personChosed: any, changeStep: any, paymentMethod: any, productId: any, step2Body: any, setPayment3Step: any, pixImg:any }
+    { personChosed, changeStep, paymentMethod, productId, step2Body, setPayment3Step, pixImg, pixCopyPaste }: { personChosed: any, changeStep: any, paymentMethod: any, productId: any, step2Body: any, setPayment3Step: any, pixImg:any, pixCopyPaste:any }
 ) {
 
 
@@ -92,6 +92,7 @@ export default function Step2NaturalPerson(
                 setPayment3Step(paymentMethod.key)
                 step2Body(body);
                 pixImg(result.data.charges[0].last_transaction.qr_code_url)
+                pixCopyPaste(result.data.charges[0].last_transaction.qr_code)
                 changeStep(2);
 
             } catch (err) {

@@ -15,7 +15,7 @@ import { RadioButton, RadioButtonChangeEvent } from 'primereact/radiobutton';
 import "./Step2.css"
 import { useNavigate } from "react-router-dom";
 
-export default function Step2NaturalPerson({ personChosed, changeStep, paymentMethod, productId, step2Body, setPayment3Step, pixImg }: { personChosed: any, changeStep: any, paymentMethod: any, productId: any, step2Body: any, setPayment3Step: any, pixImg:any }) {
+export default function Step2NaturalPerson({ personChosed, changeStep, paymentMethod, productId, step2Body, setPayment3Step, pixImg, pixCopyPaste }: { personChosed: any, changeStep: any, paymentMethod: any, productId: any, step2Body: any, setPayment3Step: any, pixImg:any , pixCopyPaste:any}) {
 
 
     const [nameValue, setNameValue] = useState('');
@@ -85,32 +85,7 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
             try {
                 const result = await axios.post(
                     `${process.env.REACT_APP_API_URL}/v1/checkout`,
-                    {payment_method: paymentMethod.key,
-                    customer: {
-                    name: nameValue,
-                    email: emailValue,
-                    phone_number: {
-                        country_code: telphoneValue[0] + telphoneValue[1],
-                        area_code: telphoneValue[2] + telphoneValue[3],
-                        number: telphoneValue.slice(4, 13)
-                    },
-
-                    document: SSN,
-                    document_type: 'CPF',
-                    type: personChosed.key,
-                    address: {
-                        zipcode: postalCodelValue,
-                        state: stateValue,
-                        city: countyValue,
-                        district: neighborhoodValue,
-                        address: publicPlaceValue,
-                        number: numberValue,
-                        country: '55'
-                    },
-                    birthDate: birthday,
-                    gender: selectedCategory.key,
-                },
-                    products: [productId]},
+                    body,
                     {
                         headers: {
                             Authorization: `Bearer ${sessionStorage.getItem("access_token")!}`,
@@ -123,6 +98,7 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
                 step2Body(body);
                 changeStep(2);
                 pixImg(result.data.charges[0].last_transaction.qr_code_url)
+                pixCopyPaste(result.data.charges[0].last_transaction.qr_code)
        
             } catch (err) {
                 err = 400
