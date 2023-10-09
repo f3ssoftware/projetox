@@ -14,7 +14,7 @@ import { InputNumber, InputNumberValueChangeEvent } from "primereact/inputnumber
 import { useNavigate } from "react-router-dom";
 
 export default function Step2NaturalPerson(
-    { personChosed, changeStep, paymentMethod, productId, step2Body, setPayment3Step }: { personChosed: any, changeStep: any, paymentMethod: any, productId: any, step2Body: any, setPayment3Step: any }
+    { personChosed, changeStep, paymentMethod, productId, step2Body, setPayment3Step, pixImg }: { personChosed: any, changeStep: any, paymentMethod: any, productId: any, step2Body: any, setPayment3Step: any, pixImg:any }
 ) {
 
 
@@ -78,7 +78,7 @@ export default function Step2NaturalPerson(
 
         if (paymentMethod.key == 'pix') {
             try {
-                await axios.post(
+               const result = await axios.post(
                     `${process.env.REACT_APP_API_URL}/v1/checkout`,
                     body,
                     {
@@ -91,11 +91,8 @@ export default function Step2NaturalPerson(
                 showStepToast("success", "Successo", "Transação incluida com sucesso");
                 setPayment3Step(paymentMethod.key)
                 step2Body(body);
-
+                pixImg(result.data.charges[0].last_transaction.qr_code_url)
                 changeStep(2);
-
-
-
 
             } catch (err) {
                 err = 400

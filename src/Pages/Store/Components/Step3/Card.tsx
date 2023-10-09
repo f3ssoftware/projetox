@@ -132,7 +132,7 @@ export default function Card({ formBody, productId }: { formBody: any, productId
                     <form onSubmit={formik.handleSubmit} >
                         <div className='grid'>
                             <div className='col-12'>
-                                <h4 style={{ marginBottom: '2%', fontSize: '20px' }}>Pagamento com Cartão de Crédito</h4>
+                                <h4 style={{ marginBottom: '2%', fontSize: '16px' }}>Pagamento com Cartão de Crédito</h4>
                             </div>
 
                             <div className="grid" style={{ marginBottom: '2%', width: '100%' }}>

@@ -8,7 +8,7 @@ import Step2LegalPerson from "./Step2LegalPerson";
 import "./Step2.css"
 
 
-export default function Step2({ setNextStep, productId, step2Body, setPaymentChosed }: { setNextStep: any, productId: any, step2Body: any, setPaymentChosed:any }) {
+export default function Step2({ setNextStep, productId, step2Body, setPaymentChosed, pixImg }: { setNextStep: any, productId: any, step2Body: any, setPaymentChosed:any, pixImg:any }) {
 
     const [personChosed, setPersonChosed] = useState<any>('');
     const categories = [
@@ -29,7 +29,7 @@ export default function Step2({ setNextStep, productId, step2Body, setPaymentCho
 
                 return (
 
-                    <Step2NaturalPerson personChosed={personChosed} changeStep={setNextStep} paymentMethod={selectedCategory} productId={productId} step2Body={step2Body} setPayment3Step = {setPaymentChosed} />
+                    <Step2NaturalPerson personChosed={personChosed} changeStep={setNextStep} paymentMethod={selectedCategory} productId={productId} step2Body={step2Body} setPayment3Step = {setPaymentChosed} pixImg={pixImg}/>
 
                 )
                 break;
@@ -37,7 +37,7 @@ export default function Step2({ setNextStep, productId, step2Body, setPaymentCho
             case 'Pessoa Jurídica':
                 return (
 
-                    <Step2LegalPerson personChosed={personChosed} changeStep={setNextStep} paymentMethod={selectedCategory} productId={productId} step2Body={step2Body} setPayment3Step = {setPaymentChosed}/>
+                    <Step2LegalPerson personChosed={personChosed} changeStep={setNextStep} paymentMethod={selectedCategory} productId={productId} step2Body={step2Body} setPayment3Step = {setPaymentChosed} pixImg={pixImg}/>
 
                 )
                 break;

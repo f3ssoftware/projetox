@@ -15,7 +15,7 @@ import { RadioButton, RadioButtonChangeEvent } from 'primereact/radiobutton';
 import "./Step2.css"
 import { useNavigate } from "react-router-dom";
 
-export default function Step2NaturalPerson({ personChosed, changeStep, paymentMethod, productId, step2Body, setPayment3Step }: { personChosed: any, changeStep: any, paymentMethod: any, productId: any, step2Body: any, setPayment3Step: any }) {
+export default function Step2NaturalPerson({ personChosed, changeStep, paymentMethod, productId, step2Body, setPayment3Step, pixImg }: { personChosed: any, changeStep: any, paymentMethod: any, productId: any, step2Body: any, setPayment3Step: any, pixImg:any }) {
 
 
     const [nameValue, setNameValue] = useState('');
@@ -83,7 +83,7 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
 
         if (paymentMethod.key == 'pix') {
             try {
-                await axios.post(
+                const result = await axios.post(
                     `${process.env.REACT_APP_API_URL}/v1/checkout`,
                     {payment_method: paymentMethod.key,
                     customer: {
@@ -119,12 +119,11 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
 
                 );
                 showStepToast("success", "Successo", "Transação incluida com sucesso");
-
                 setPayment3Step(paymentMethod.key)
                 step2Body(body);
-
                 changeStep(2);
-
+                pixImg(result.data.charges[0].last_transaction.qr_code_url)
+       
             } catch (err) {
                 err = 400
                     ? (showStepToast("error", "Erro", "Preencha os campos obrigatórios"))
@@ -206,7 +205,6 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
                         .required('Necessário preencher'),
                     number: Yup.number()
                         .required('Necessário preencher')
-                        .max(5),
 
                 })}
 
@@ -420,8 +418,9 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
                             </div>
                             <div className="col-12 md:col-3" style={{ marginTop: '2%' }}>
                                 <span className="p-float-label" >
-                                    <InputNumber style={{ width: '100%' }} value={formik.values.number} useGrouping={false} maxLength={5}
+                                    <InputNumber style={{ width: '100%' }} value={formik.values.number} useGrouping={false} 
                                         onChange={(e) => { setNumberValueValue(e.value!); formik.setFieldValue('number', e.value) }}
+                                        maxLength={5}
                                         className={classNames({
                                             "p-invalid": formik.touched.number && formik.errors.number,
                                         })}
