@@ -13,8 +13,9 @@ import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { InputNumber, InputNumberValueChangeEvent } from "primereact/inputnumber";
 import { RadioButton, RadioButtonChangeEvent } from 'primereact/radiobutton';
 import "./Step2.css"
+import { useNavigate } from "react-router-dom";
 
-export default function Step2NaturalPerson({ personChosed, changeStep, paymentMethod, productId, step2Body, setPayment3Step }: { personChosed: any, changeStep: any, paymentMethod: any, productId: any, step2Body: any, setPayment3Step:any }) {
+export default function Step2NaturalPerson({ personChosed, changeStep, paymentMethod, productId, step2Body, setPayment3Step }: { personChosed: any, changeStep: any, paymentMethod: any, productId: any, step2Body: any, setPayment3Step: any }) {
 
 
     const [nameValue, setNameValue] = useState('');
@@ -33,8 +34,12 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
         { sex: 'Feminino', key: 'female' },
 
     ];
+    const navigate = useNavigate();
+    const handleCancel = () => {
+        navigate(`/store`)
+    };
 
-   
+
     const [selectedCategory, setSelectedCategory] = useState<any>(categories[0]);
     const toast = useRef<Toast>(null);
     const brazilStates: BrazilState[] = Object.values(BrazilState);
@@ -44,7 +49,7 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
     };
 
     const SendForm = async () => {
-        
+
         const body = {
             payment_method: paymentMethod.key,
             customer: {
@@ -74,13 +79,38 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
             products: [productId]
         };
 
-        step2Body(body);
-        
+
+
         if (paymentMethod.key == 'pix') {
             try {
                 await axios.post(
                     `${process.env.REACT_APP_API_URL}/v1/checkout`,
-                    body,
+                    {payment_method: paymentMethod.key,
+                    customer: {
+                    name: nameValue,
+                    email: emailValue,
+                    phone_number: {
+                        country_code: telphoneValue[0] + telphoneValue[1],
+                        area_code: telphoneValue[2] + telphoneValue[3],
+                        number: telphoneValue.slice(4, 13)
+                    },
+
+                    document: SSN,
+                    document_type: 'CPF',
+                    type: personChosed.key,
+                    address: {
+                        zipcode: postalCodelValue,
+                        state: stateValue,
+                        city: countyValue,
+                        district: neighborhoodValue,
+                        address: publicPlaceValue,
+                        number: numberValue,
+                        country: '55'
+                    },
+                    birthDate: birthday,
+                    gender: selectedCategory.key,
+                },
+                    products: [productId]},
                     {
                         headers: {
                             Authorization: `Bearer ${sessionStorage.getItem("access_token")!}`,
@@ -89,9 +119,11 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
 
                 );
                 showStepToast("success", "Successo", "Transação incluida com sucesso");
-                changeStep(2);
-                setPayment3Step(paymentMethod.key)
 
+                setPayment3Step(paymentMethod.key)
+                step2Body(body);
+
+                changeStep(2);
 
             } catch (err) {
                 err = 400
@@ -100,10 +132,11 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
             }
         }
 
-        else if(paymentMethod.key == 'credit_card' && (nameValue && emailValue && SSN && postalCodelValue && stateValue && neighborhoodValue && publicPlaceValue && numberValue && birthday)){
-            step2Body(body);
+        else if (paymentMethod.key == 'credit_card' && (nameValue && emailValue && SSN && postalCodelValue && stateValue && neighborhoodValue && publicPlaceValue && numberValue && birthday)) {
+
             changeStep(2);
             setPayment3Step(paymentMethod.key)
+            step2Body(body);
         }
     };
 
@@ -172,16 +205,17 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
                     publicPlace: Yup.string()
                         .required('Necessário preencher'),
                     number: Yup.number()
-                        .required('Necessário preencher'),
+                        .required('Necessário preencher')
+                        .max(5),
 
                 })}
 
                 onSubmit={(values, { setSubmitting }) => {
                     setTimeout(() => {
-                      alert(JSON.stringify(values, null, 2));
-                      setSubmitting(false);
+                        alert(JSON.stringify(values, null, 2));
+                        setSubmitting(false);
                     }, 400);
-                  }}
+                }}
 
             >
                 {formik => (
@@ -386,8 +420,8 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
                             </div>
                             <div className="col-12 md:col-3" style={{ marginTop: '2%' }}>
                                 <span className="p-float-label" >
-                                    <InputNumber style={{ width: '100%' }} value={formik.values.number} useGrouping={false}
-                                        onChange={(e) => { setNumberValueValue(e.value!); formik.setFieldValue('number', e.value); console.log(e.value) }}
+                                    <InputNumber style={{ width: '100%' }} value={formik.values.number} useGrouping={false} maxLength={5}
+                                        onChange={(e) => { setNumberValueValue(e.value!); formik.setFieldValue('number', e.value) }}
                                         className={classNames({
                                             "p-invalid": formik.touched.number && formik.errors.number,
                                         })}
@@ -430,10 +464,19 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
 
                         <div className='grid' style={{ marginTop: '5%' }} >
 
-                            <div className='col-11'>
+                            <div className='col-3 md:col-2 lg:col-1'>
+                                <div className="secondButton">
+                                    <Button type="button" label="CANCELAR" style={{ color: '#0278D3', backgroundColor: 'white', border: '1px solid #0278D3' }}
+                                        onClick={() => handleCancel()}
+
+                                    />
+
+                                </div>
+                            </div>
+                            <div className='col-6 md:col-8 lg:col-10' >
                             </div>
 
-                            <div className='col-1'>
+                            <div className='col-3 md:col-2 lg:col-1' >
                                 <div className="secondButton">
                                     <Button label="PRÓXIMO" type="submit"
                                         onClick={() => SendForm()}
@@ -443,10 +486,12 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
                                 </div>
                             </div>
                         </div>
+
                     </form>
                 )}
             </Formik>
 
-        </div>
+
+        </div >
     )
 }

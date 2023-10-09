@@ -3,7 +3,7 @@ import { Button } from "primereact/button";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -12,7 +12,10 @@ export default function Step1({ productId, setNextStep }: { productId: any, setN
 
   const [products, setProducts] = useState<any[]>([]);
   const [selectedTransaction, setSelectedTransaction] = useState<any>();
-
+  const navigate = useNavigate();
+    const handleCancel = () => {
+        navigate(`/store`)
+    };
 
   const fetchProduct = async () => {
     try {
@@ -33,7 +36,7 @@ export default function Step1({ productId, setNextStep }: { productId: any, setN
     }
   };
 
-  
+
 
 
   useEffect(() => {
@@ -73,8 +76,20 @@ export default function Step1({ productId, setNextStep }: { productId: any, setN
 
       </DataTable>
 
+     
+
       <div className='grid' style={{ marginTop: '5%', width: '93%' }} >
-        <div className='col-11'>
+
+      <div className='col-1'>
+        <div className="secondButton" >
+          <Button type="button" label="CANCELAR" style={{ color: '#0278D3', backgroundColor: 'white', border: '1px solid #0278D3' }}
+            onClick={() => handleCancel()}
+
+          />
+
+        </div>
+      </div>
+        <div className='col-10'>
         </div>
 
         <div className='col-1'>

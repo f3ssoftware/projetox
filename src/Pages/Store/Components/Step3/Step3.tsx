@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import Card from './Card';
 import Pix from './Pix'
 
-export default function Step3({ formBody, paymentMethod, setInitialStep }: { formBody: any, paymentMethod: any, setInitialStep:any }) {
+export default function Step3({ formBody, paymentMethod, productId }: { formBody: any, paymentMethod: any, productId: any }) {
 
 
 
@@ -16,7 +16,7 @@ export default function Step3({ formBody, paymentMethod, setInitialStep }: { for
 
             case 'credit_card':
                 return(      
-                  <Card formBody={formBody} setInitialStep={setInitialStep} />
+                  <Card formBody={formBody} productId={productId} />
                     
 
                 )
@@ -28,10 +28,6 @@ export default function Step3({ formBody, paymentMethod, setInitialStep }: { for
                 return (<></>)
         }
     }
-
-    useEffect(() => {
-        console.log(paymentMethod);
-    }, [paymentMethod])
 
     return (
 

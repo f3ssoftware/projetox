@@ -11,9 +11,10 @@ import { InputMask, InputMaskChangeEvent } from 'primereact/inputmask';
 import { BrazilState } from '../../../../Shared/enums/BrazilState';
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { InputNumber, InputNumberValueChangeEvent } from "primereact/inputnumber";
+import { useNavigate } from "react-router-dom";
 
 export default function Step2NaturalPerson(
-    { personChosed, changeStep, paymentMethod, productId, step2Body, setPayment3Step }: { personChosed: any, changeStep: any, paymentMethod: any, productId: any, step2Body: any, setPayment3Step:any }
+    { personChosed, changeStep, paymentMethod, productId, step2Body, setPayment3Step }: { personChosed: any, changeStep: any, paymentMethod: any, productId: any, step2Body: any, setPayment3Step: any }
 ) {
 
 
@@ -31,7 +32,10 @@ export default function Step2NaturalPerson(
     const toast = useRef<Toast>(null);
     const brazilStates: BrazilState[] = Object.values(BrazilState);
     const [cardBody, setCardBody] = useState<any>()
-
+    const navigate = useNavigate()
+    const handleCancel = () => {
+        navigate(`/store`)
+    };
     const showStepToast = (severity: ToastMessage["severity"], summary: string, detail: string) => {
         toast.current?.show([{ severity, summary, detail }]);
 
@@ -70,7 +74,7 @@ export default function Step2NaturalPerson(
             products: [productId]
         };
 
-        step2Body(body);
+
 
         if (paymentMethod.key == 'pix') {
             try {
@@ -82,24 +86,27 @@ export default function Step2NaturalPerson(
                             Authorization: `Bearer ${sessionStorage.getItem("access_token")!}`,
                         },
                     },
-
                 );
+               
                 showStepToast("success", "Successo", "Transação incluida com sucesso");
+                setPayment3Step(paymentMethod.key)
+                step2Body(body);
+
                 changeStep(2);
-                setPayment3Step(paymentMethod.key);
+
+
+
 
             } catch (err) {
                 err = 400
                     ? (showStepToast("error", "Erro", "Preencha os campos obrigatórios"))
                     : showStepToast("error", "Erro", "" + err);
             }
-
         }
-
-        else if(paymentMethod.key == 'credit_card' && (nameValue && emailValue && EIN && postalCodelValue && stateValue && neighborhoodValue && publicPlaceValue && numberValue && birthday)){
-            step2Body(body);
+        else if (paymentMethod.key == 'credit_card' && (nameValue && emailValue && EIN && postalCodelValue && stateValue && neighborhoodValue && publicPlaceValue && numberValue && birthday)) {
             changeStep(2);
-            setPayment3Step(paymentMethod.key);
+            setPayment3Step(paymentMethod.key)
+            step2Body(body);
         }
     };
 
@@ -399,10 +406,19 @@ export default function Step2NaturalPerson(
 
                         <div className='grid' style={{ marginTop: '5%' }} >
 
-                            <div className='col-11'>
+                            <div className='col-3 md:col-2 lg:col-1'>
+                                <div className="secondButton">
+                                    <Button type="button" label="CANCELAR" style={{ color: '#0278D3', backgroundColor: 'white', border: '1px solid #0278D3' }}
+                                        onClick={() => handleCancel()}
+
+                                    />
+
+                                </div>
+                            </div>
+                            <div className='col-6 md:col-8 lg:col-10' >
                             </div>
 
-                            <div className='col-1'>
+                            <div className='col-3 md:col-2 lg:col-1' >
                                 <div className="secondButton">
                                     <Button label="PRÓXIMO" type="submit"
                                         onClick={() => SendForm()}
@@ -412,6 +428,7 @@ export default function Step2NaturalPerson(
                                 </div>
                             </div>
                         </div>
+
                     </form>
                 )}
             </Formik>

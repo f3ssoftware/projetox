@@ -63,7 +63,7 @@ export default function Store2ndPage() {
 
             case 2:
 
-                return (<Step3 formBody={step2BodyInfo} paymentMethod={paymentMethod} setInitialStep={setActiveIndex}/>)
+                return (<Step3 formBody={step2BodyInfo} paymentMethod={paymentMethod} productId={cardId}/>)
                 break;
             default:
 
