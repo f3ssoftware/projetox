@@ -1,18 +1,12 @@
 import "./Login.css";
 import { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { InputText } from "primereact/inputtext";
-import { Password } from "primereact/password";
 import { Button } from "primereact/button";
 import axios from "axios";
 import { Toast, ToastMessage } from "primereact/toast";
-import SVGLogo from "../../Shared/img/LogoSVG";
 import Video from "../../Shared/img/PeopleBusiness.mp4";
 import httpService from "../../Shared/HttpHelper/pjx-http.helper";
-import {
-  authenticateCognito,
-  signUpCognito,
-} from "../../Shared/GoogleAuth/GoogleAuth";
 
 export default function CodeAuth() {
   let navigate = useNavigate();
@@ -30,30 +24,29 @@ export default function CodeAuth() {
 
   useEffect(() => {}, []);
 
-  async function LogUser(e: any) {
-    // e.preventDefault();
-    // if (user !== '' && senha !== '') {
-    //     // await authenticateCognito(user, senha).then(() => {
-    //     //     navigate('/dashboard', { replace: true })
-    //     // })
-    //     try {
-    //         const result = await httpService.post(`${process.env.REACT_APP_API_URL}/v2/authentication/login`, {
-    //             email: user,
-    //             password: senha,
-    //         });
-    //         sessionStorage.setItem("access_token", result?.data.idToken.jwtToken);
-    //         sessionStorage.setItem("refresh_token", result?.data.idToken.refreshToken);
-    //         navigate('/dashboard', { replace: true })
-    //     }
-    //     catch (err: any) {
-    //         console.log(err);
-    //         //  alert('Usuário não credenciado.')
-    //         show('error', 'Erro', 'Usuário não credenciado');
-    //     }
-    // }
-    // else {
-    //     show('warn', 'Atenção!', 'Insira os dados em todos os campos.');
-    // }
+  async function AuthCode(e: any) {
+    const {email} = useParams()
+
+    e.preventDefault();
+    if (code !== '' ) {
+
+        try {
+            const result = await httpService.post(`${process.env.REACT_APP_API_URL}/v1/authentication/confirm-user`, {
+                email: email,
+                token: code,
+            });
+            // sessionStorage.setItem("access_token", result?.data.idToken.jwtToken);
+            sessionStorage.setItem("refresh_token", result?.data.idToken.refreshToken);
+            navigate('/dashboard', { replace: true })
+        }
+        catch (err: any) {
+            console.log(err);
+            show('error', 'Erro', 'Usuário não credenciado');
+        }
+    }
+    else {
+        show('warn', 'Atenção!', 'Insira os dados em todos os campos.');
+    }
   }
 
   return (
@@ -80,7 +73,7 @@ export default function CodeAuth() {
             </span>
           </div>
 
-          <form onSubmit={(e) => LogUser(e)}>
+          <form onSubmit={(e) => AuthCode(e)}>
             <Toast ref={toast} />
             <div className="login-user" style={{ width: "100%" }}>
               <label>Código</label>
@@ -91,7 +84,7 @@ export default function CodeAuth() {
             </div>
             <Button
               label="Confirmar"
-              onClick={(e) => LogUser(e)}
+              onClick={(e) => AuthCode(e)}
               style={{ marginTop: "10%" }}
             />
 

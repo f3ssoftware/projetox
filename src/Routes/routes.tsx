@@ -27,7 +27,7 @@ function Rotas() {
                 <Route path='/login' element={<Login />} />
                 <Route path='/email_register' element={<EmailRegister />} />
                 <Route path='/register' element={<Register />} />
-                <Route path='/codeAuth' element={<CodeAuth />} />
+                <Route path='/confirm-user/:email' element={<CodeAuth />} />
 
                 <Route element={<Casket />}>
                     <Route path='/balance' element={<Balance />} />
