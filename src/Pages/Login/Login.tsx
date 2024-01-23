@@ -34,8 +34,8 @@ export default function Login() {
         if (user !== '' && senha !== '') {
 
             try {
-                const result = await httpService.post(`${process.env.REACT_APP_API_URL}/v1/authentication/login`, {
-                    username: user,
+                const result = await httpService.post(`${process.env.REACT_APP_API_URL}/v2/authentication/login`, {
+                    email: user,
                     password: senha,
                 });
 

@@ -4,10 +4,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
+import { Dropdown } from 'primereact/dropdown';
 import { Toast, ToastMessage } from 'primereact/toast'
 import axios from "axios";
 import Video from '../../Shared/img/PeopleBusiness.mp4'
 
+interface Gender {
+    gender: string;
+}
 
 function EmailRegister() {
 
@@ -15,16 +19,22 @@ function EmailRegister() {
     const [user, setUser] = useState('');
     const [password, setPassword] = useState('');
     const [confirmationPassword, setConfirmationPassword] = useState('');
+    const [selectedGender, setSelectedGender] = useState<Gender | null>(null);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
+    const [birthdate, setBirthdate] = useState('');
     const toast = useRef<Toast>(null);
+    const gender: Gender[] = [
+        { gender: 'Masculino' },
+        { gender: 'Feminino' },
+    ];
 
 
     const show = (severity: ToastMessage["severity"], summary: string, detail: string) => {
         toast.current?.show({ severity, summary, detail });
     };
 
-    const novoUsuario = async (e:any) => {
+    const novoUsuario = async (e: any) => {
 
         e.preventDefault();
         if (user !== '' && password !== '' && firstName !== "" && lastName !== '' && confirmationPassword !== '') {
@@ -35,15 +45,17 @@ function EmailRegister() {
 
                         email: user,
                         password: password,
-                        firstName: firstName,
-                        lastName: lastName,
+                        gender: selectedGender,
+                        given_name: firstName,
+                        family_name: lastName,
+                        birthdate: birthdate,
                     })
                     show('success', 'Success', 'Usuário registrado com sucesso.');
 
                     setTimeout(() => {
                         navigate('/login', { replace: true });
-                      }, 3000);
-                    
+                    }, 3000);
+
 
                 }
 
@@ -88,6 +100,10 @@ function EmailRegister() {
 
                         <label>Confirmar Senha</label>
                         <Password value={confirmationPassword} onChange={(e) => setConfirmationPassword(e.target.value)} feedback={false} />
+
+                        <label>Sexo</label>
+                        <Dropdown value={selectedGender} onChange={(e) => setSelectedGender(e.value)} options={gender} optionLabel="gender"
+                         className="w-full md:w-14rem" />
 
                         <label>Primeiro Nome</label>
                         <InputText value={firstName} onChange={(e) => setFirstName(e.target.value)} />
