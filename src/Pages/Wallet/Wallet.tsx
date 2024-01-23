@@ -2,7 +2,6 @@ import './wallet.css'
 import { Menu } from 'primereact/menu';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from "axios";
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
@@ -16,6 +15,7 @@ import IncludeWallet from './Incluir Carteira/IncludeWallet';
 import EditWallet from './Editar Carteira/editWallet'
 import { Toast, ToastMessage } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import httpService from '../../Shared/HttpHelper/pjx-http.helper';
 
 export default function Wallet() {
 
@@ -73,7 +73,7 @@ export default function Wallet() {
     const deleteWallets = async () => {
 
         try {
-            await axios.delete(`${process.env.REACT_APP_API_URL}/v1/wallets/${selectedWallet?.id}`, {
+            await httpService.delete(`${process.env.REACT_APP_API_URL}/v1/wallets/${selectedWallet?.id}`, {
 
                 headers: {
                     Authorization: `Bearer ${sessionStorage.getItem('access_token')}`
@@ -94,14 +94,14 @@ export default function Wallet() {
     const fetchWallets = async (params?: any) => {
         try {
             setLoading(true);
-            const result = await axios.get(`${process.env.REACT_APP_API_URL}/v1/wallets`, {
+            const result = await httpService.get(`${process.env.REACT_APP_API_URL}/v1/wallets`, {
                 headers: {
                     Authorization: `Bearer ${sessionStorage.getItem('access_token')}`
                 },
                 params
             });
             setLoading(false);
-            setWallets(result.data);
+            setWallets(result!.data);
         } catch (err) {
 
         }

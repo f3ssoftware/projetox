@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import axios from "axios";
 import {
   ColorPicker,
   ColorPickerChangeEvent,
 } from "primereact/colorpicker";
+import httpService from "../../../../Shared/HttpHelper/pjx-http.helper";
 
 export default function IncludeGroup({
   closeDialog,
@@ -24,7 +24,7 @@ export default function IncludeGroup({
 
   const addGroups = async () => {
     try {
-      await axios.post(
+      await httpService.post(
         `${process.env.REACT_APP_API_URL}/v1/groups/${walletId}`,
         {
           name: text1,

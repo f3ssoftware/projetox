@@ -5,12 +5,12 @@ import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { Installment } from "../../../models/Installment";
 import InstallmentForm from "./InstallmentForm";
-import axios from "axios";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { useFormik } from "formik";
 import { classNames } from "primereact/utils";
 import { CurrencyEnum } from "../../../Shared/enums/CurrencyEnum";
+import httpService from "../../../Shared/HttpHelper/pjx-http.helper";
 
 export default function TransactionForm({
   walletId,
@@ -37,7 +37,7 @@ export default function TransactionForm({
 
   const asyncNewTransaction = async () => {
     try {
-      await axios.post(
+      await httpService.post(
         `${process.env.REACT_APP_API_URL}/v1/transactions`,
         {
           reference: reference,
@@ -106,12 +106,12 @@ export default function TransactionForm({
 
   const fetchGroups = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/v1/groups/${walletId}`, {
+      const response = await httpService.get(`${process.env.REACT_APP_API_URL}/v1/groups/${walletId}`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("access_token")!}`,
         }
       });
-      setGroups(response.data)
+      setGroups(response!.data)
     } catch (err) {
 
     }

@@ -2,10 +2,10 @@ import { useRef, useState } from 'react';
 import './deleteWallet.css'
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-import axios from "axios";
 import { Toast, ToastMessage } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { WalletDto } from '../../../models/wallet.dto';
+import httpService from '../../../Shared/HttpHelper/pjx-http.helper';
 
 
 
@@ -30,7 +30,7 @@ export default function DeleteWallet({ closeDialog, wallet }: { closeDialog: any
 
         try {
 
-            await axios.delete(`${process.env.REACT_APP_API_URL}/v1/wallets/${wallet?.id}`, {
+            await httpService.delete(`${process.env.REACT_APP_API_URL}/v1/wallets/${wallet?.id}`, {
 
                 headers: {
                     Authorization: `Bearer ${sessionStorage.getItem('access_token')}`

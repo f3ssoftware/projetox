@@ -1,7 +1,6 @@
 import "./balance.css";
 import { useState, useEffect, SetStateAction, useRef } from "react";
 import "primeicons/primeicons.css";
-import axios from "axios";
 import { Button } from "primereact/button";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -16,6 +15,7 @@ import { MenuItem } from "primereact/menuitem";
 import { SplitButton } from "primereact/splitbutton";
 import PaymentAction from "./Components/PaymentAction";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import httpService from "../../Shared/HttpHelper/pjx-http.helper";
 
 
 export default function Balance() {
@@ -67,7 +67,7 @@ export default function Balance() {
   const deleteTransaction = async () => {
 
     try {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/v1/transactions/${selectedTransaction.id}`, {
+      await httpService.delete(`${process.env.REACT_APP_API_URL}/v1/transactions/${selectedTransaction.id}`, {
 
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem('access_token')}`
@@ -95,7 +95,7 @@ export default function Balance() {
 
   const walletsBill = async () => {
     try {
-      const result = await axios.get(
+      const result = await httpService.get(
         `${process.env.REACT_APP_API_URL}/v1/wallets/${selectedWallet?.id}`,
         {
           headers: {
@@ -103,13 +103,13 @@ export default function Balance() {
           },
         }
       );
-      setValue1(result.data.stats.walletBalance);
-      setVencidas(result.data.stats.walletExpiredBillingQuantity);
-      setValue2(result.data.stats.walletExpiredBillingAmount);
-      setValue3(result.data.stats.walletOutcomeBillingAmount);
-      setAPagar(result.data.stats.walletOutcomeBillingQuantity);
-      setAReceber(result.data.stats.walletIncomeBillingQuantity);
-      setValue4(result.data.stats.walletIncomeBillingAmount);
+      setValue1(result!.data.stats.walletBalance);
+      setVencidas(result!.data.stats.walletExpiredBillingQuantity);
+      setValue2(result!.data.stats.walletExpiredBillingAmount);
+      setValue3(result!.data.stats.walletOutcomeBillingAmount);
+      setAPagar(result!.data.stats.walletOutcomeBillingQuantity);
+      setAReceber(result!.data.stats.walletIncomeBillingQuantity);
+      setValue4(result!.data.stats.walletIncomeBillingAmount);
     } catch (err) {
       alert(err);
     }
@@ -117,7 +117,7 @@ export default function Balance() {
 
   const fetchWallets = async () => {
     try {
-      const result = await axios.get(
+      const result = await httpService.get(
         `${process.env.REACT_APP_API_URL}/v1/wallets`,
         {
           headers: {
@@ -125,7 +125,7 @@ export default function Balance() {
           },
         }
       );
-      setWallets(result.data);
+      setWallets(result!.data);
     } catch (err) {
       alert(err);
     }
@@ -133,7 +133,7 @@ export default function Balance() {
   const fetchTransactions = async (params?: any) => {
     if (params) {
       try {
-        var result = await axios.get(
+        var result = await httpService.get(
           `${process.env.REACT_APP_API_URL}/v1/transactions/${selectedWallet?.id}`,
           {
             headers: {
@@ -143,13 +143,13 @@ export default function Balance() {
           }
         );
 
-        setTransactions(result.data);
+        setTransactions(result!.data);
       } catch (err) {
         alert(err);
       }
     } else {
       try {
-        var result = await axios.get(
+        var result = await httpService.get(
           `${process.env.REACT_APP_API_URL}/v1/transactions/${selectedWallet?.id}`,
           {
             headers: {
@@ -158,7 +158,7 @@ export default function Balance() {
           }
         );
 
-        setTransactions(result.data);
+        setTransactions(result!.data);
       } catch (err) {
         alert(err);
       }

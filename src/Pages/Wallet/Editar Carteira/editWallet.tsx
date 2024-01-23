@@ -2,11 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import './editWallet.css'
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-import axios from "axios";
 import { Toast, ToastMessage } from 'primereact/toast'
 import { CurrencyEnum } from '../../../Shared/enums/CurrencyEnum';
 import { Dropdown } from 'primereact/dropdown';
 import { WalletDto } from '../../../models/wallet.dto';
+import httpService from '../../../Shared/HttpHelper/pjx-http.helper';
 
 export default function EditWallet({ closeDialog, wallet, onSuccess, onError }: { closeDialog: any, wallet: WalletDto, onSuccess: Function, onError: Function }) {
 
@@ -26,7 +26,7 @@ export default function EditWallet({ closeDialog, wallet, onSuccess, onError }: 
 
     const ChangeWallet = async () => {
         try {
-            const result = await axios.put(`${process.env.REACT_APP_API_URL}/v1/wallets/${wallet?.id}`, {
+            const result = await httpService.put(`${process.env.REACT_APP_API_URL}/v1/wallets/${wallet?.id}`, {
                 currency: selectedCurrency,
                 name: text1,
                 createdAt: new Date()

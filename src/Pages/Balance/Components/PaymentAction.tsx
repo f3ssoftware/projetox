@@ -3,10 +3,10 @@ import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 import { Calendar, CalendarChangeEvent } from "primereact/calendar";
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
-import axios from "axios";
 import { Button } from "primereact/button";
 import { useFormik } from "formik";
 import { classNames } from "primereact/utils";
+import httpService from "../../../Shared/HttpHelper/pjx-http.helper";
 
 export default function PaymentAction({
   transaction,
@@ -45,7 +45,7 @@ export default function PaymentAction({
 
   const asyncNewRecurrency = async () => {
     try {
-      await axios.put(
+      await httpService.put(
         `${process.env.REACT_APP_API_URL}/v1/transactions/pay/${transaction?.id}`,
         {
           
