@@ -94,11 +94,12 @@ export default function TransactionForm({
     },
     onSubmit: (data) => {
       data && onError(data);
+      
       formik.resetForm();
     },
   });
 
-  const   isFormFieldInvalid = (fieldName: string) => {
+  const isFormFieldInvalid = (fieldName: string) => {
     const formikToucheds: any = formik.touched;
     const formikError: any = formik.errors;
     return !!formikToucheds[fieldName] && !!formikError[fieldName];
@@ -164,7 +165,7 @@ export default function TransactionForm({
                   formik.setFieldValue("reference", e.target.value);
                   setReference(e.target.value);
                  
-                }}
+                }} 
                 className={classNames({
                   "p-invalid": isFormFieldInvalid("reference"),
                 })}

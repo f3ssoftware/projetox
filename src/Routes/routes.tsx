@@ -12,6 +12,8 @@ import Wallet from '../Pages/Wallet/Wallet'
 import Verifying from '../Pages/Verifying/verifying'
 import { Casket } from '../Shared/Casket/Casket';
 import WalletDetail from '../Pages/Wallet/WalletDetail/WalletDetail';
+import StoreMainPage from '../Pages/Store/Components/StoreMainPage';
+import Store2nd from '../Pages/Store/Components/Store2ndPage';
 
 
 function Rotas() {
@@ -33,6 +35,8 @@ function Rotas() {
                     <Route path='/due_dated' element={<Due_Dated />} />
                     <Route path='/payable' element={<Payable />} />
                     <Route path='/receivable' element={<Receivable />} />
+                    <Route path='/store' element={<StoreMainPage />} />
+                    <Route path='/storeresume/:cardId' element={<Store2nd />} />
 
 
                 </Route>

@@ -74,7 +74,9 @@ export default function Balance() {
         }
       });
       showToast('success', 'Success', 'Deletado com sucesso.');
+     
       fetchWallets();
+  
     }
 
     catch (err: any) {

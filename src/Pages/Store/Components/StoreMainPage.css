@@ -1,0 +1,85 @@
+@media screen and (max-width: 1000px){
+    .store-container h1 {
+
+        font-size: 35px !important;
+      }
+
+      .store-card svg{
+        min-width: 80%;
+      }
+
+      
+      .store-card h3{
+        font-size: 18px !important;
+        
+      }
+      .store-card h4{
+        font-size: 12px !important;
+        display: flex !important;
+        justify-content: center !important;
+        text-align: center;
+        
+      }
+      .store-card .p-button{
+        display: flex !important;
+        justify-content: center !important;
+        width: 65% !important;
+      }
+
+      .store-card .p-button-label{
+        font-size: 12px;
+      }
+
+}
+
+.store-main-content{
+    padding: 2% 5%;
+    width: 100%;
+}
+
+.store-container{
+    height: 95vh;
+    width: 95%;
+    
+}
+
+.store-card{
+    display: flex;
+    border: solid rgba(0, 0, 0, 0.25);
+    border-width: 0 1px 1px 1px;  
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.25); 
+    padding: 10% 0;
+    justify-content: center;
+    margin: 0 5%;
+
+}
+
+.store-container h1 {
+    margin-bottom: 3%;
+    font-size: 45px;
+  }
+  
+
+  .store-card h3{
+    font-size: 25px;
+    margin-top: 3%;
+  }
+  .store-card h4{
+    font-size: 20px;
+    margin-top: 3%;
+  }
+
+  .store-card .p-button{
+    width: 30%;
+    display: flex;
+    justify-content: center;
+   
+  }
+  .store-card .col{
+    justify-content: center;
+    display: flex;
+  }
+  .store-card .col-12{
+    justify-content: center;
+    display: flex;
+  }
