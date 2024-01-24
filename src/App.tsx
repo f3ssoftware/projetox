@@ -7,6 +7,7 @@ import "primeicons/primeicons.css";
 import { InputText } from 'primereact/inputtext';
 import { useState } from "react";
 //import {useState} from 'react'  
+import { PrimeReactProvider } from 'primereact/api';
 
 
 import "./App.scss"
@@ -19,12 +20,13 @@ import { Casket } from "./Shared/Casket/Casket";
 function App() {
 
   return (
+    <PrimeReactProvider>
 
-    <div>    <div>
-      <Rotas></Rotas>
-    </div>
+      <div style={{ height: '100vh' }}>
+        <Rotas></Rotas>
+      </div>
 
-    </div>
+    </PrimeReactProvider>
 
   );
 }

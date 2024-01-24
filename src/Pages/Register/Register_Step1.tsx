@@ -25,49 +25,9 @@ function Register() {
         toast.current?.show({ severity, summary, detail });
     };
 
-    const novoUsuario = async () => {
-
-
-
-        if (user !== '' && password !== '' && firstName !== "" && lastName !== '' && confirmationPassword !== '') {
-
-            if (password === confirmationPassword) {
-                try {
-                    const result = await httpService.post(`${process.env.REACT_APP_API_URL}/v1/users`, {
-
-                        email: user,
-                        password: password,
-                        firstName: firstName,
-                        lastName: lastName,
-                    })
-
-
-                    navigate('/', { replace: true })
-
-                }
-
-                catch (err: any) {
-                    console.log(err);
-                    // alert('Falha ao registrar usuário.')
-                    show('error', 'Error', err.response.data.message);
-                }
-            }
-            else {
-                show('warn', 'Warn', 'Favor inserir senha e confirmação de senha iguais.');
-            }
-        }
-        else {
-            // alert('Insira os dados em todos os campos.')
-            show('warn', 'Warn', 'Favor inserir os dados em todos os  campos.');
-
-
-        }
-    }
-
-
     return (
 
-        <div className="container">
+        <div className="register-step1-container">
             <Toast ref={toast} />
             <div className="fitting">
                 <video width="100%" height="100%" style={{ objectFit: "cover" }} loop autoPlay muted >

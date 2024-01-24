@@ -58,17 +58,17 @@ export default function Login() {
 
     return (
 
-        <div className="container">
+        <div className="login-container">
 
-            <div className="fitting">
+            <div className="login-fitting" style={{padding: '0', margin: '0' }}>
 
-                <video width="100%" height="100%" style={{ objectFit: "cover" }} loop autoPlay muted >
+                <video loop autoPlay muted style={{padding: '0', margin: '0' }}>
                     <source src={Video} type="video/mp4" />
                 </video>
             </div>
 
-            <div className="login">
-                <div className="pull-everybody">
+            <div className="login" style={{margin: '0', padding: '0', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+                <div style={{height: '50%'}}>
 
                     <div className="logo">
                         <SVGLogo fill="#2B2B2B" width={250} height={250} />

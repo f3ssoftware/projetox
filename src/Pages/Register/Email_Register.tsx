@@ -1,13 +1,18 @@
-import "./Register.css"
-import { useState, useRef } from 'react'
+
+import { useState, useRef, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
-import { Dropdown } from 'primereact/dropdown';
+import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { Toast, ToastMessage } from 'primereact/toast'
 import Video from '../../Shared/img/PeopleBusiness.mp4'
 import httpService from "../../Shared/HttpHelper/pjx-http.helper";
+import { Calendar } from "primereact/calendar";
+import { BrazilState } from "../../Shared/enums/BrazilState";
+import { InputMask, InputMaskChangeEvent } from "primereact/inputmask";
+import axios from "axios";
+import { InputNumber } from "primereact/inputnumber";
 
 interface Gender {
     gender: string;
@@ -23,12 +28,36 @@ function EmailRegister() {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [birthdate, setBirthdate] = useState('');
+    const [birthdateToServer, setBirthdateToServer] = useState('');
     const toast = useRef<Toast>(null);
     const gender: Gender[] = [
         { gender: 'Masculino' },
         { gender: 'Feminino' },
     ];
+    const [stateValue, setStateValue] = useState('');
+    let maxDate = new Date();
+    const brazilStates: BrazilState[] = Object.values(BrazilState);
+    const [postalCodelValue, setPostalCodelValue] = useState<any>('');
+    const [countyValue, setCountyValue] = useState('');
+    const [neighborhoodValue, setNeighborhoodValue] = useState('');
+    const [streetValue, setStreetValue] = useState('');
+    const [numberValue, setNumberValueValue] = useState<number>(undefined!);
+    const [complement, setComplement] = useState('');
 
+    const checkPostalCode = async () => {
+        try {
+            const result = await axios.get(
+                "https://viacep.com.br/ws/" + postalCodelValue + "/json/"
+            );
+            setStateValue(result.data.uf);
+            setNeighborhoodValue(result.data.bairro);
+            setStreetValue(result.data.logradouro);
+            setCountyValue(result.data.localidade)
+
+        } catch (err) {
+            alert(err);
+        }
+    };
 
     const show = (severity: ToastMessage["severity"], summary: string, detail: string) => {
         toast.current?.show({ severity, summary, detail });
@@ -41,14 +70,23 @@ function EmailRegister() {
 
             if (password === confirmationPassword) {
                 try {
-                    const result = await httpService.post(`${process.env.REACT_APP_API_URL}/v1/users`, {
+                    await httpService.post(`${process.env.REACT_APP_API_URL}/v2/verify-user`, {
 
                         email: user,
                         password: password,
-                        gender: selectedGender,
+                        gender: selectedGender?.gender,
                         given_name: firstName,
                         family_name: lastName,
-                        birthdate: birthdate,
+                        birthdate: birthdateToServer,
+                        andress: {
+                            state: stateValue,
+                            city: countyValue,
+                            district: neighborhoodValue,
+                            zipcode: postalCodelValue,
+                            street: streetValue,
+                            number: numberValue,
+                            complement: complement
+                        }
                     })
                     show('success', 'Success', 'Usuário registrado com sucesso.');
 
@@ -62,7 +100,7 @@ function EmailRegister() {
                 catch (err: any) {
                     console.log(err);
 
-                    show('error', 'Error', err.response.data.message);
+                    show('error', 'Error', err.response);
                 }
             }
             else {
@@ -77,50 +115,148 @@ function EmailRegister() {
         }
     }
 
+    useEffect(() => {
+        if (postalCodelValue.length == 8) {
+            checkPostalCode();
+        }
+        else {
+            setStateValue('');
+            setNeighborhoodValue('');
+            setStreetValue('');
+        }
+    }, [postalCodelValue]);
 
     return (
 
-        <div className="container">
-            <div className="fitting">
-                <video width="100%" height="100%" style={{ objectFit: "cover" }} loop autoPlay muted >
-                    <source src={Video} type="video/mp4" />
-                </video>
-            </div>
-
-            <div className="reg">
-                <div className="register-pull-everybody" >
-                    <Toast ref={toast} />
-
-                    <form onSubmit={(e) => novoUsuario(e)}>
-                        <label>Email</label>
-                        <InputText value={user} onChange={(e) => setUser(e.target.value)} />
-
-                        <label>Senha</label>
-                        <Password value={password} onChange={(e) => setPassword(e.target.value)} feedback={false} />
-
-                        <label>Confirmar Senha</label>
-                        <Password value={confirmationPassword} onChange={(e) => setConfirmationPassword(e.target.value)} feedback={false} />
-
-                        <label>Sexo</label>
-                        <Dropdown value={selectedGender} onChange={(e) => setSelectedGender(e.value)} options={gender} optionLabel="gender"
-                         className="w-full md:w-14rem" />
-
-                        <label>Primeiro Nome</label>
-                        <InputText value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-
-                        <label>Segundo Nome</label>
-                        <InputText value={lastName} onChange={(e) => setLastName(e.target.value)} />
-
-                        <Button label="Registrar" onClick={(e) => novoUsuario(e)} style={{ marginTop: "10%" }} />
-
-                        <div className="go-to-login" style={{ marginTop: "5%" }}>
-                            <Link to={`/login`}>Já possuo conta</Link>
-                        </div>
-
-                    </form>
+        <div style={{ backgroundColor: '#2B2B2B'}}>
+            <Toast ref={toast} />
+            <div className='grid' style={{margin: '0', padding: '0'}}>
+                <div className='col-8' style={{ height: '100vh', margin: '0', padding: '0' }}>
+                    <video width="100%" height='100%' style={{ objectFit: 'cover' , margin: '0', padding: '0'  }} loop autoPlay muted >
+                        <source src={Video} type="video/mp4" /> 
+                    </video>
                 </div>
-            </div>
 
+                <div className='col-4'>
+                 
+                        <form onSubmit={(e) => novoUsuario(e)}>
+
+                            <div className="grid" style={{margin: '0', padding: '0' }}>
+
+                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                    <label>Email</label>
+                                    <InputText value={user} onChange={(e) => setUser(e.target.value)} />
+                                </div>
+
+                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                    <label>Senha</label>
+                                    <Password value={password} onChange={(e) => setPassword(e.target.value)} feedback={false} />
+                                </div>
+                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                    <label>Confirmar Senha</label>
+                                    <Password value={confirmationPassword} onChange={(e) => setConfirmationPassword(e.target.value)} feedback={false} />
+                                </div>
+
+                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                    <label>Sexo</label>
+                                    <Dropdown value={selectedGender} onChange={(e) => setSelectedGender(e.value)} options={gender} optionLabel="gender"
+                                         />
+                                </div>
+                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                    <label>Primeiro Nome</label>
+                                    <InputText value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                                </div>
+                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                    <label>Segundo Nome</label>
+                                    <InputText value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                                </div>
+
+                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                    <label htmlFor="birthdate">Data de Nascimento</label>
+                                    <Calendar
+                                        style={{ maxHeight: '70%'}}
+                                        id='birthdate'
+                                        value={birthdate}
+                                        maxDate={maxDate}
+                                        onChange={(e: any) => {
+                                            setBirthdateToServer(e.target.value.toISOString());
+                                            setBirthdate(e.target.value);
+                                        }}
+                                        touchUI
+                                        selectionMode="single"
+                                        locale="en"
+                                        dateFormat="dd/mm/yy"
+                                    />
+                                </div>
+
+
+                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                    <label htmlFor="birthdate">CEP</label>
+                                    <InputMask id="zipcode" name='postalCode' onChange={(e: InputMaskChangeEvent) => { setPostalCodelValue(e.target.value?.replace(/[^\d]/g, "")) }}
+                                        mask="99999-999"
+
+                                    />
+                                </div>
+
+                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                    <label htmlFor="state">UF</label>
+                                    <Dropdown value={stateValue} id="state" onChange={(e: DropdownChangeEvent) => { setStateValue(e.target.value) }} options={brazilStates}
+                                    />
+                                </div>
+                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                    <label htmlFor="state">Município</label>
+                                    <InputText
+                                        id="county" name='county'
+                                        value={countyValue}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setCountyValue(e.target.value) }}
+                                    />
+                                </div>
+                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                    <label htmlFor="state">Bairro</label>
+                                    <InputText
+                                        id='neighborhood'
+                                        value={neighborhoodValue}
+                                        onChange={(e) => { setNeighborhoodValue(e.target.value) }}
+                                    />
+                                </div>
+
+                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                    <label htmlFor="state">Logradouro</label>
+                                    <InputText value={streetValue} onChange={(e) => { setStreetValue(e.target.value) }}
+                                    />
+                                </div>
+
+                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                    <label htmlFor="state">Número</label>
+                                    <InputNumber style={{ width: '100%' }} value={numberValue} useGrouping={false}
+                                        onChange={(e) => { setNumberValueValue(e.value!) }}
+                                        maxLength={5}
+                                    />
+                                </div>
+
+                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                    <label htmlFor="state">Complemento</label>
+                                    <InputText
+                                        id='complement'
+                                        value={complement}
+                                        onChange={(e) => { setComplement(e.target.value) }}
+                                    />
+
+                                </div>
+                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                    <Button label="Registrar" onClick={(e) => novoUsuario(e)} style={{ marginTop: "3%" }} />
+                                </div>
+                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                    <div style={{ marginTop: "2%", display: 'flex', justifyContent: 'center' }}>
+                                        <Link to={`/login`}>Já possuo conta</Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                 
+                </div>
+
+            </div>
 
         </div>
     );

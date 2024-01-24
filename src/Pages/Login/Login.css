@@ -1,88 +1,96 @@
-@media screen and (max-width: 430px){
-    .container{
+@media screen and (max-width: 430px) {
+    .container {
         width: 100%;
     }
 
-    .fitting{
+    .fitting {
         display: none;
     }
 
-    .login{
+    .login {
         min-width: 100%;
     }
 }
 
-.container{
-    max-width:100%;
+.login-container {
+    max-width: 100%;
     width: 100%;
-    height: 100vh;
     background-color: #2B2B2B;
     display: flex;
-    max-height:fit-content;
 }
 
-.fitting{
+.login-fitting {
     width: 67%;
-    height:100vh;   
-}
-.login{
     
-    background-color:#2B2B2B;
-    width:33%;
+   
+}
+
+.login-fitting video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.login {
+
+    background-color: #2B2B2B;
+    width: 33%;
     height: 100vh;
-    display:flex;
+    display: flex;
     flex-direction: row;
     justify-content: center;
-    
+
 }
-.pull-everybody{
+
+.pull-everybody {
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items:center;
-    justify-content:center;
+    align-items: center;
+    justify-content: center;
     padding: 10%;
 }
 
-.pull-everybody .logo{
+.pull-everybody .logo {
     margin-bottom: 5%;
 }
-.pull-everybody label{
-    color:white;
+
+.pull-everybody label {
+    color: white;
     font-family: Roboto;
     margin: 1.5% 0;
 }
 
-form{
+.login form {
     width: 100%;
 }
 
-.p-inputtext{
+.p-inputtext {
     width: 100%;
 
 }
 
-.p-password{
+.p-password {
     width: 100%;
 }
 
-.p-button{
+.p-button {
     width: 100%;
     background-color: #0278D3;
     border-radius: 0;
-    
+
 }
 
 
-.Register{
-    display:flex;
+.Register {
+    display: flex;
     justify-content: center;
-    width:100%;
+    width: 100%;
 }
 
-.login a{
+.login a {
     text-decoration: none;
-    color: #009BE7; 
-    display:flex;
+    color: #009BE7;
+    display: flex;
     justify-content: center;
 }
