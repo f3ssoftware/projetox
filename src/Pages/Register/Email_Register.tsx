@@ -1,4 +1,4 @@
-
+import './Register.css'
 import { useState, useRef, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { InputText } from 'primereact/inputtext';
@@ -25,6 +25,7 @@ function EmailRegister() {
     const [password, setPassword] = useState('');
     const [confirmationPassword, setConfirmationPassword] = useState('');
     const [selectedGender, setSelectedGender] = useState<Gender | null>(null);
+    const [apiGender, setApiGender] = useState('')
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [birthdate, setBirthdate] = useState('');
@@ -70,14 +71,14 @@ function EmailRegister() {
 
             if (password === confirmationPassword) {
                 try {
-                    await httpService.post(`${process.env.REACT_APP_API_URL}/v2/verify-user`, {
+                    await httpService.post(`${process.env.REACT_APP_API_URL}/v2/users`, {
 
                         email: user,
                         password: password,
                         gender: selectedGender?.gender,
                         given_name: firstName,
                         family_name: lastName,
-                        birthdate: birthdateToServer,
+                        birthdate: birthdate,
                         andress: {
                             state: stateValue,
                             city: countyValue,
@@ -126,55 +127,71 @@ function EmailRegister() {
         }
     }, [postalCodelValue]);
 
+    useEffect(() => {
+        if (selectedGender?.gender == 'Masculino') {
+            setApiGender('male')
+
+        }
+        else if (selectedGender?.gender == 'Feminino') {
+            setApiGender('female')
+
+        }
+    }, [selectedGender]);
+
+
+
     return (
 
-        <div style={{ backgroundColor: '#2B2B2B'}}>
+        <div className='register-container' style={{ backgroundColor: '#2B2B2B' }}>
             <Toast ref={toast} />
-            <div className='grid' style={{margin: '0', padding: '0'}}>
-                <div className='col-8' style={{ height: '100vh', margin: '0', padding: '0' }}>
-                    <video width="100%" height='100%' style={{ objectFit: 'cover' , margin: '0', padding: '0'  }} loop autoPlay muted >
-                        <source src={Video} type="video/mp4" /> 
+
+            <div className='grid' >
+
+                <div className='col-8' style={{height: '100%'}}>
+                    <video width="100%" height='100%' style={{ objectFit: 'cover'}} loop autoPlay muted >
+                        <source src={Video} type="video/mp4" />
                     </video>
                 </div>
 
+
                 <div className='col-4'>
-                 
-                        <form onSubmit={(e) => novoUsuario(e)}>
 
-                            <div className="grid" style={{margin: '0', padding: '0' }}>
+                    <form onSubmit={(e) => novoUsuario(e)}>
+                        <div style={{  height: '100vh' }}>
+                            <div className="grid" style={{fontSize: '15px', color: '#4F4F4F', height: '100%', padding: '5%'}}>
 
-                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                <div className="col-12" style={{ margin: '0', padding: '0' }}>
                                     <label>Email</label>
                                     <InputText value={user} onChange={(e) => setUser(e.target.value)} />
                                 </div>
 
-                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                <div className="col-12" style={{ margin: '0', padding: '0' }}>
                                     <label>Senha</label>
                                     <Password value={password} onChange={(e) => setPassword(e.target.value)} feedback={false} />
                                 </div>
-                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                <div className="col-12" style={{ margin: '0', padding: '0' }}>
                                     <label>Confirmar Senha</label>
                                     <Password value={confirmationPassword} onChange={(e) => setConfirmationPassword(e.target.value)} feedback={false} />
                                 </div>
 
-                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                <div className="col-12" style={{ margin: '0', padding: '0' }}>
                                     <label>Sexo</label>
                                     <Dropdown value={selectedGender} onChange={(e) => setSelectedGender(e.value)} options={gender} optionLabel="gender"
-                                         />
+                                    />
                                 </div>
-                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                <div className="col-12" style={{ margin: '0', padding: '0' }}>
                                     <label>Primeiro Nome</label>
                                     <InputText value={firstName} onChange={(e) => setFirstName(e.target.value)} />
                                 </div>
-                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                <div className="col-12" style={{ margin: '0', padding: '0' }}>
                                     <label>Segundo Nome</label>
                                     <InputText value={lastName} onChange={(e) => setLastName(e.target.value)} />
                                 </div>
 
-                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                <div className="col-12" style={{ margin: '0', padding: '0' }}>
                                     <label htmlFor="birthdate">Data de Nascimento</label>
                                     <Calendar
-                                        style={{ maxHeight: '70%'}}
+                                        style={{ maxHeight: '70%' }}
                                         id='birthdate'
                                         value={birthdate}
                                         maxDate={maxDate}
@@ -190,7 +207,7 @@ function EmailRegister() {
                                 </div>
 
 
-                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                <div className="col-12" style={{ margin: '0', padding: '0' }}>
                                     <label htmlFor="birthdate">CEP</label>
                                     <InputMask id="zipcode" name='postalCode' onChange={(e: InputMaskChangeEvent) => { setPostalCodelValue(e.target.value?.replace(/[^\d]/g, "")) }}
                                         mask="99999-999"
@@ -198,12 +215,12 @@ function EmailRegister() {
                                     />
                                 </div>
 
-                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                <div className="col-12" style={{ margin: '0', padding: '0' }}>
                                     <label htmlFor="state">UF</label>
                                     <Dropdown value={stateValue} id="state" onChange={(e: DropdownChangeEvent) => { setStateValue(e.target.value) }} options={brazilStates}
                                     />
                                 </div>
-                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                <div className="col-12" style={{ margin: '0', padding: '0' }}>
                                     <label htmlFor="state">Município</label>
                                     <InputText
                                         id="county" name='county'
@@ -211,7 +228,7 @@ function EmailRegister() {
                                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setCountyValue(e.target.value) }}
                                     />
                                 </div>
-                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                <div className="col-12" style={{ margin: '0', padding: '0' }}>
                                     <label htmlFor="state">Bairro</label>
                                     <InputText
                                         id='neighborhood'
@@ -220,13 +237,13 @@ function EmailRegister() {
                                     />
                                 </div>
 
-                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                <div className="col-12" style={{ margin: '0', padding: '0' }}>
                                     <label htmlFor="state">Logradouro</label>
                                     <InputText value={streetValue} onChange={(e) => { setStreetValue(e.target.value) }}
                                     />
                                 </div>
 
-                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                <div className="col-12" style={{ margin: '0', padding: '0' }}>
                                     <label htmlFor="state">Número</label>
                                     <InputNumber style={{ width: '100%' }} value={numberValue} useGrouping={false}
                                         onChange={(e) => { setNumberValueValue(e.value!) }}
@@ -234,7 +251,7 @@ function EmailRegister() {
                                     />
                                 </div>
 
-                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                <div className="col-12" style={{ margin: '0', padding: '0' }}>
                                     <label htmlFor="state">Complemento</label>
                                     <InputText
                                         id='complement'
@@ -243,19 +260,20 @@ function EmailRegister() {
                                     />
 
                                 </div>
-                                <div className="col-12" style={{margin: '0', padding: '0' }}>
+                                <div className="col-12" style={{ margin: '0', padding: '0' }}>
                                     <Button label="Registrar" onClick={(e) => novoUsuario(e)} style={{ marginTop: "3%" }} />
                                 </div>
-                                <div className="col-12" style={{margin: '0', padding: '0' }}>
-                                    <div style={{ marginTop: "2%", display: 'flex', justifyContent: 'center' }}>
+                                <div className="col-12" style={{ margin: '0', padding: '0' }}>
+                                    <div className='register-link' style={{ marginTop: "2%", display: 'flex', justifyContent: 'center', color: 'rgb(84, 208, 246), '}}>
                                         <Link to={`/login`}>Já possuo conta</Link>
                                     </div>
                                 </div>
                             </div>
-                        </form>
-                 
-                </div>
+                        </div>
+                    </form>
 
+
+                </div>
             </div>
 
         </div>

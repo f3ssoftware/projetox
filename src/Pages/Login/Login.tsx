@@ -60,42 +60,49 @@ export default function Login() {
 
         <div className="login-container">
 
-            <div className="login-fitting" style={{padding: '0', margin: '0' }}>
+            <div className="login-fitting" style={{ padding: '0', margin: '0' }}>
 
-                <video loop autoPlay muted style={{padding: '0', margin: '0' }}>
+                <video loop autoPlay muted style={{ padding: '0', margin: '0' }}>
                     <source src={Video} type="video/mp4" />
                 </video>
             </div>
 
-            <div className="login" style={{margin: '0', padding: '0', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
-                <div style={{height: '50%'}}>
+            <div className="login" style={{ margin: '0', padding: '0', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
 
-                    <div className="logo">
-                        <SVGLogo fill="#2B2B2B" width={250} height={250} />
+                <div className="grid" >
+                    <div className="col-12 " style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div className="logo">
+                            <SVGLogo fill="#2B2B2B" width={250} height={250} />
+                        </div>
                     </div>
 
-                    <form onSubmit={(e) => LogUser(e)}>
-                        <Toast ref={toast} />
-                        <div className="login-user" style={{ width: "100%" }}>
+                    <div className="col-12" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10%', color: 'white' }}>
+                        <form onSubmit={(e) => LogUser(e)} style={{ maxWidth: '100%' }}>
+                            <Toast ref={toast} />
+                            <div className="login-user" style={{ width: "100%", maxWidth: '100%' }}>
+                                <div style={{ marginBottom: '2%' }}>
+                                    <label >Usuário</label>
+                                </div>
+                                <InputText value={user} onChange={(e) => setUser(e.target.value)} />
+                            </div>
+                            <div style={{ marginTop: "1%", width: "100%" }}>
+                                <div style={{ marginBottom: '2%' }}>
+                                    <label>Senha</label>
+                                </div>
+                                <Password value={senha} onChange={(e) => setSenha(e.target.value)} feedback={false} />
 
-                            <label>Usuário</label>
-                            <InputText value={user} onChange={(e) => setUser(e.target.value)} />
-                        </div>
-                        <div style={{ marginTop: "1%", width: "100%" }}>
-                            <label>Senha</label>
-                            <Password value={senha} onChange={(e) => setSenha(e.target.value)} feedback={false} />
+                            </div>
 
-                        </div>
+                            <Button label="Entrar" onClick={(e) => LogUser(e)} style={{ marginTop: "10%" }} />
 
-                        <Button label="Entrar" onClick={(e) => LogUser(e)} style={{ marginTop: "10%" }} />
-
-                        <div className="Register" style={{ marginTop: "5%" }}>
-                            <Link to={`/register`}>Não possuo conta</Link>
-                        </div>
-                    </form>
+                            <div className="Register" style={{ marginTop: "5%" }}>
+                                <Link to={`/register`}>Não possuo conta</Link>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-
             </div>
+
 
         </div>
     )
