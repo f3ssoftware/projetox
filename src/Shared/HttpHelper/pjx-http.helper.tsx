@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosError, AxiosRequestConfig } from "axios";
 
 const httpService = {
     get,
@@ -13,7 +13,7 @@ async function get(url: string, options?: AxiosRequestConfig) {
 
         return res;
     } catch (err: any) {
-        if (err.status === 403 || err.status === 401) {
+        if (err.response.status === 403 || err.response.status === 401) {
             refreshToken(await get(url, options));
             return;
         }
@@ -27,11 +27,12 @@ async function post(url: string, body: any, options?: AxiosRequestConfig) {
 
         return res;
     } catch (err: any) {
-        if (err.status === 403 || err.status === 401) {
+        if (err.response.status === 403 || err.response.status === 401) {
             refreshToken(await get(url, options));
             return;
         }
-        throw new Error(err.message);
+        console.log(err)
+        throw new AxiosError(err.response.data.message, err.response.status);
     }
 }
 
@@ -41,7 +42,7 @@ async function put(url: string, body: any, options?: AxiosRequestConfig) {
 
         return res;
     } catch (err: any) {
-        if (err.status === 403 || err.status === 401) {
+        if (err.response.status === 403 || err.response.status === 401) {
             refreshToken(await get(url, options));
             return;
         }
@@ -55,7 +56,7 @@ async function patch(url: string, body: any, options?: AxiosRequestConfig) {
 
         return res;
     } catch (err: any) {
-        if (err.status === 403 || err.status === 401) {
+        if (err.response.status === 403 || err.response.status === 401) {
             refreshToken(await get(url, options));
             return;
         }
@@ -69,7 +70,7 @@ async function _delete(url: string, options?: AxiosRequestConfig) {
 
         return res;
     } catch (err: any) {
-        if (err.status === 403 || err.status === 401) {
+        if (err.response.status === 403 || err.response.status === 401) {
             refreshToken(await get(url, options));
             return;
         }

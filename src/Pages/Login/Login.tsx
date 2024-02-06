@@ -8,24 +8,20 @@ import { Toast, ToastMessage } from 'primereact/toast'
 import SVGLogo from '../../Shared/img/LogoSVG'
 import Video from '../../Shared/img/PeopleBusiness.mp4'
 import httpService from "../../Shared/HttpHelper/pjx-http.helper";
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 export default function Login() {
 
     let navigate = useNavigate()
     const [user, setUser] = useState('');
     const [senha, setSenha] = useState('');
-
+    const [loading, setLoading] = useState(false);
     const toast = useRef<Toast>(null);
 
 
     const show = (severity: ToastMessage["severity"], summary: string, detail: string) => {
         toast.current?.show({ severity, summary, detail });
     };
-
-    useEffect(() => {
-
-
-    }, []);
 
     async function LogUser(e: any) {
 
@@ -38,16 +34,24 @@ export default function Login() {
                     password: senha,
                 });
 
-                sessionStorage.setItem("access_token", result?.data.access_token);
-                sessionStorage.setItem("refresh_token", result?.data.refresh_token);
+                sessionStorage.setItem("access_token", result?.data.accessToken.jwtToken);
+                sessionStorage.setItem("refresh_token", result?.data.refreshToken.token);
                 navigate('/dashboard', { replace: true })
             }
 
             catch (err: any) {
-                //  alert('Usuário não credenciado.')
-                show('error', 'Erro', 'Usuário não credenciado');
-
+                console.log(err)
+                if (err.code == 403) {
+                    show('error', 'Erro', 'Usuário não credenciado');
+                }
+                else if(err.code == 409){
+                    navigate(`/token?email=${user}`, { replace: true }); 
+                }
             }
+            // finally {
+            //     // Para o spinner após o término da requisição (com sucesso ou erro)
+            //     setLoading(false);
+            // }
         }
 
         else {
@@ -94,6 +98,7 @@ export default function Login() {
                             </div>
 
                             <Button label="Entrar" onClick={(e) => LogUser(e)} style={{ marginTop: "10%" }} />
+                            {/* {loading && <ProgressSpinner style={{ width: '30px', height: '30px', margin: '10px' }} />} */}
 
                             <div className="Register" style={{ marginTop: "5%" }}>
                                 <Link to={`/register`}>Não possuo conta</Link>
