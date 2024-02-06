@@ -13,11 +13,11 @@ async function get(url: string, options?: AxiosRequestConfig) {
 
         return res;
     } catch (err: any) {
-        if (err.response.status === 403 || err.response.status === 401) {
-            refreshToken(await get(url, options));
-            return;
-        }
-        throw new Error(err.message);
+        // if (err.response.status === 403 || err.response.status === 401) {
+        //     refreshToken(await get(url, options));
+        //     return;
+        // }
+        throw new AxiosError(err.message);
     }
 }
 
@@ -27,11 +27,10 @@ async function post(url: string, body: any, options?: AxiosRequestConfig) {
 
         return res;
     } catch (err: any) {
-        if (err.response.status === 403 || err.response.status === 401) {
-            refreshToken(await get(url, options));
-            return;
-        }
-        console.log(err)
+        // if (err.response.status === 403 || err.response.status === 401) {
+        //     refreshToken(await get(url, options));
+        //     return;
+        // }
         throw new AxiosError(err.response.data.message, err.response.status);
     }
 }
@@ -46,7 +45,7 @@ async function put(url: string, body: any, options?: AxiosRequestConfig) {
             refreshToken(await get(url, options));
             return;
         }
-        throw new Error(err.message);
+        throw new AxiosError(err.message);
     }
 }
 
@@ -56,11 +55,11 @@ async function patch(url: string, body: any, options?: AxiosRequestConfig) {
 
         return res;
     } catch (err: any) {
-        if (err.response.status === 403 || err.response.status === 401) {
-            refreshToken(await get(url, options));
-            return;
-        }
-        throw new Error(err.message);
+        // if (err.response.status === 403 || err.response.status === 401) {
+        //     refreshToken(await get(url, options));
+        //     return;
+        // }
+        throw new AxiosError(err.message);
     }
 }
 
@@ -70,11 +69,11 @@ async function _delete(url: string, options?: AxiosRequestConfig) {
 
         return res;
     } catch (err: any) {
-        if (err.response.status === 403 || err.response.status === 401) {
-            refreshToken(await get(url, options));
-            return;
-        }
-        throw new Error(err.message);
+        // if (err.response.status === 403 || err.response.status === 401) {
+        //     refreshToken(await get(url, options));
+        //     return;
+        // }
+        throw new AxiosError(err.message);
     }
 }
 
@@ -91,7 +90,7 @@ async function refreshToken(callback: any) {
         sessionStorage.setItem('access_token', newTokenReq.data.access_token);
         callback();
     } catch (err: any) {
-        throw new Error(err.message);
+        throw new AxiosError(err.message);
     }
 }
 
