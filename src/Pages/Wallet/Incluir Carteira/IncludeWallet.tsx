@@ -34,8 +34,13 @@ export default function IncludeWallet({ closeDialog, onSuccess, onError }: { clo
             closeDialog();
         }
         catch (err) {
+            console.log(err)
             if (err = 400) {
-                onError('error', 'Erro', 'Invalid currency');
+                if(text1 == ''){
+                    onError('error', 'Erro', 'Escolha um título');
+                }
+                else if(selectedCurrency == '')
+                onError('error', 'Erro', 'Escolha uma moeda');
             }
         }
     }

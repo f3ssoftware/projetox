@@ -131,7 +131,7 @@ export default function Dashboard() {
 
             setCashIn(result!.data.cashinAmount)
             setCashOut(result!.data.cashoutAmount)
-           
+
             setFutureCashIn(result!.data.futureCashin)
             setFutureCashOut(result!.data.futureCashout)
 
@@ -153,7 +153,7 @@ export default function Dashboard() {
                     }),
                     backgroundColor: co.map((p, index) => {
                         return p.color
-                       
+
                     }),
                     // hoverBackgroundColor: [
                     //     documentStyle.getPropertyValue('--blue-400'),
@@ -383,37 +383,54 @@ export default function Dashboard() {
 
                                 </div>
 
-                                <div className='flux-data' style={{ marginTop: '2%' }}>
-                                    <div className='flux'>
-                                        <h4 style={{ color: '#A5A5A5' }}>Entrada</h4>
-                                        <span style={{ color: '#0F9803', }}>{cashIn?.toLocaleString("pt-BR", {
+                                <div className='grid' style={{ marginTop: '2%', display: 'flex', justifyContent: 'center' }}>
+                                
+                                    <div className='col md:col-1'/>
+                                    <div className='col-3 md:col-3' style={{}}>
+                                        <div className='flux'>
+                                            <h3 style={{ color: '#A5A5A5' }}>Entrada</h3>
+                                            <span style={{ color: '#0F9803', }}>{cashIn?.toLocaleString("pt-BR", {
                                                 style: "currency",
                                                 currency: selectedCurrency,
                                             })
-                                        }
-                                        </span>
+                                            }
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div className='flux'>
-                                        <h4 style={{ color: '#A5A5A5' }}>Saída</h4>
-                                        <span style={{ color: '#A60000', }}>{cashOut?.toLocaleString("pt-BR", {
+                                    <div className='col-3 md:col-3'>
+                                        <div className='flux'>
+                                            <h3 style={{ color: '#A5A5A5' }}>Saída</h3>
+                                            <span style={{ color: '#A60000', }}>{cashOut?.toLocaleString("pt-BR", {
                                                 style: "currency",
                                                 currency: selectedCurrency,
                                             })
-                                        }
-                                        </span>
+                                            }
+                                            </span>
+                                        </div>
+                                    </div>
 
+                                    <div className='col-3 md:col-3'>
+                                        <div className='flux'>
+                                            <div className='grid'>
+                                                <div className='col-12'>
+                                                    <h3 style={{ color: '#A5A5A5' }}>Futuro</h3>
+                                                </div>
+                                                <div className='col-12'>
+                                                    <h5 style={{ color: '#A5A5A5' }}>Entrada: {FutureCashIn?.toLocaleString("pt-BR", {
+                                                        style: "currency",
+                                                        currency: selectedCurrency,
+                                                    })}</h5>
+                                                </div>
+                                                <div className='col-12'>
+                                                    <h5 style={{ color: '#A5A5A5' }}>Saída: {FutureCashOut?.toLocaleString("pt-BR", {
+                                                        style: "currency",
+                                                        currency: selectedCurrency,
+                                                    })}</h5>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className='flux'>
-                                        <h4 style={{ color: '#A5A5A5' }}>Futuro</h4>
-                                        <h5 style={{ color: '#A5A5A5' }}>Entrada: {FutureCashIn?.toLocaleString("pt-BR", {
-                                            style: "currency",
-                                            currency: selectedCurrency,
-                                        })}</h5>
-                                        <h5 style={{ color: '#A5A5A5' }}>Saída: {FutureCashOut?.toLocaleString("pt-BR", {
-                                            style: "currency",
-                                            currency: selectedCurrency,
-                                        })}</h5>
-                                    </div>
+
                                 </div>
 
                                 <div className='grid' style={{ marginTop: '5%', display: 'flex', justifyContent: 'center' }}>
