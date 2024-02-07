@@ -1,17 +1,4 @@
-@media screen and (max-width: 950px){
 
-  .flux-data{
-    flex-direction: row;
-    align-items: center;
-    
-  }
-  .flux{
-    margin-bottom: 2%;
-    width: 45% !important;
-    height: 12vh !important;
-    font-size: 1em !important;
-  }
-}
 .container .menu {
   width: 10%;
   display: flex;
@@ -31,16 +18,15 @@
 
 
 .flux {
-  display: flex;
+  /* display: flex; */
   border: 1px solid #ABABAB;
   min-width: 100%;
-  min-height: 100%;
-  margin-right: 2%;
-  border-radius: 10px;
+  min-height: 100%; 
+  /* margin-right: 2%; */
+  border-radius: 15px; 
   padding: 5%;
 
 }  
-
 
 .flux h4{
   margin-bottom: 13%;

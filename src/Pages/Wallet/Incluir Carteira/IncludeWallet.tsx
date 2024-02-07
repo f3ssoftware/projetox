@@ -6,6 +6,7 @@ import { Toast, ToastMessage } from 'primereact/toast';
 import { Dropdown } from 'primereact/dropdown';
 import { CurrencyEnum } from '../../../Shared/enums/CurrencyEnum';
 import httpService from '../../../Shared/HttpHelper/pjx-http.helper';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function IncludeWallet({ closeDialog, onSuccess, onError }: { closeDialog: any, onSuccess: Function, onError: Function }) {
@@ -13,6 +14,7 @@ export default function IncludeWallet({ closeDialog, onSuccess, onError }: { clo
     const [text1, setText1] = useState('');
     const [text2, setText2] = useState('');
     // const toast = useRef<Toast>(null);
+    const navigate = useNavigate();
 
     const [selectedCurrency, setSelectedCurrency] = useState('');
     var currencyTypes = Object.values(CurrencyEnum);
@@ -41,6 +43,9 @@ export default function IncludeWallet({ closeDialog, onSuccess, onError }: { clo
                 }
                 else if(selectedCurrency == '')
                 onError('error', 'Erro', 'Escolha uma moeda');
+            }
+            else if (err = 401){
+                navigate('/login')
             }
         }
     }

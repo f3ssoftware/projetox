@@ -332,123 +332,145 @@ export default function Dashboard() {
                 <h1>Dashboard</h1>
                 <div className='grid'>
                     <div className='col-11'>
+
                         <TabView style={{ width: '100%' }}>
 
                             <TabPanel header="Fluxo de Caixa">
+                                <div className='grid'>
+                                    <div className='col-12'>
+                                        <div className="grid">
+                                            <div className="col-12 md: col-6 lg:col-2">
+                                                <span className="p-float-label" style={{ marginTop: '7%' }}>
+                                                    <Dropdown value={selectedCurrency} onChange={(e) => {
+                                                        setSelectedCurrency(e.value);
 
-                                <div className="grid">
-                                    <div className="col-12 md: col-6 lg:col-2">
-                                        <span className="p-float-label" style={{ marginTop: '7%' }}>
-                                            <Dropdown value={selectedCurrency} onChange={(e) => {
-                                                setSelectedCurrency(e.value);
+                                                        fetchCashOut({ currency: e.value, days_gone: selectedPeriod });
+                                                        fetchCashIn({ currency: e.value, days_gone: selectedPeriod });
+                                                        fetchCurrencyStats({ currency: e.value, days_gone: selectedPeriod })
+                                                        fetchCashflow({ currency: e.value, period: selectedPeriod })
+                                                        // chartProfitability(e.value, selectedPeriod);
+                                                        // fetchProfitability({ currency: e.value, year: selectedYear})
+                                                    }} options={currencyTypes}
+                                                    />
+                                                    <label htmlFor="date">Moeda</label>
+                                                </span>
+                                            </div>
+                                            <div className="col-12 md: col-6 lg:col-2">
+                                                <span className="p-float-label" style={{ marginTop: '7%' }}>
+                                                    <Dropdown value={selectedPeriod} onChange={(e) => {
+                                                        setSelectedPeriod(e.value)
+                                                        // chartCashOut(selectedCurrency, e.value);
+                                                        // chartCashIn(selectedCurrency, e.value);
+                                                        fetchCurrencyStats({ currency: selectedCurrency, days_gone: e.value })
+                                                        fetchCashOut({ currency: selectedCurrency, days_gone: e.value });
+                                                        fetchCashIn({ currency: selectedCurrency, days_gone: e.value });
+                                                        fetchCashflow({ currency: selectedCurrency, days_gone: e.value })
+                                                        // fetchProfitability({ currency: selectedCurrency, year: e.value})
+                                                    }} options={periodOptions} />
+                                                    <label htmlFor="period">Período</label>
+                                                </span>
+                                            </div>
 
-                                                fetchCashOut({ currency: e.value, days_gone: selectedPeriod });
-                                                fetchCashIn({ currency: e.value, days_gone: selectedPeriod });
-                                                fetchCurrencyStats({ currency: e.value, days_gone: selectedPeriod })
-                                                fetchCashflow({ currency: e.value, period: selectedPeriod })
-                                                // chartProfitability(e.value, selectedPeriod);
-                                                // fetchProfitability({ currency: e.value, year: selectedYear})
-                                            }} options={currencyTypes}
-                                            />
-                                            <label htmlFor="date">Moeda</label>
-                                        </span>
-                                    </div>
-                                    <div className="col-12 md: col-6 lg:col-2">
-                                        <span className="p-float-label" style={{ marginTop: '7%' }}>
-                                            <Dropdown value={selectedPeriod} onChange={(e) => {
-                                                setSelectedPeriod(e.value)
-                                                // chartCashOut(selectedCurrency, e.value);
-                                                // chartCashIn(selectedCurrency, e.value);
-                                                fetchCurrencyStats({ currency: selectedCurrency, days_gone: e.value })
-                                                fetchCashOut({ currency: selectedCurrency, days_gone: e.value });
-                                                fetchCashIn({ currency: selectedCurrency, days_gone: e.value });
-                                                fetchCashflow({ currency: selectedCurrency, days_gone: e.value })
-                                                // fetchProfitability({ currency: selectedCurrency, year: e.value})
-                                            }} options={periodOptions} />
-                                            <label htmlFor="period">Período</label>
-                                        </span>
-                                    </div>
-
-                                </div>
-
-                                <div className="grid" style={{ marginTop: "2%", marginLeft: '' }}>
-                                    <h5 style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>Fluxo de Caixa</h5>
-                                    <div className="col-12 md: col-12 lg:col-12">
-
-                                        <Chart type="line"
-                                            data={chartData} options={chartOptions}
-                                        />
-
-                                    </div>
-
-                                </div>
-
-                                <div className='grid' style={{ marginTop: '2%', display: 'flex', justifyContent: 'center' }}>
-                                
-                                    <div className='col md:col-1'/>
-                                    <div className='col-3 md:col-3' style={{}}>
-                                        <div className='flux'>
-                                            <h3 style={{ color: '#A5A5A5' }}>Entrada</h3>
-                                            <span style={{ color: '#0F9803', }}>{cashIn?.toLocaleString("pt-BR", {
-                                                style: "currency",
-                                                currency: selectedCurrency,
-                                            })
-                                            }
-                                            </span>
                                         </div>
                                     </div>
-                                    <div className='col-3 md:col-3'>
-                                        <div className='flux'>
-                                            <h3 style={{ color: '#A5A5A5' }}>Saída</h3>
-                                            <span style={{ color: '#A60000', }}>{cashOut?.toLocaleString("pt-BR", {
-                                                style: "currency",
-                                                currency: selectedCurrency,
-                                            })
-                                            }
-                                            </span>
+                                    <div className='col-12'>
+                                        <div className="grid" style={{ marginTop: "2%", marginLeft: '' }}>
+                                            <h5 style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>Fluxo de Caixa</h5>
+                                            <div className="col-12 md: col-12 lg:col-12">
+
+                                                <Chart type="line"
+                                                    data={chartData} options={chartOptions}
+                                                />
+
+                                            </div>
+
                                         </div>
                                     </div>
+                                    <div className='col-12'>
+                                        <div className='grid' style={{ marginTop: '2%', marginBottom: '2%', display: 'flex', justifyContent: 'center', alignContent: 'center' }}>
 
-                                    <div className='col-3 md:col-3'>
-                                        <div className='flux'>
-                                            <div className='grid'>
-                                                <div className='col-12'>
-                                                    <h3 style={{ color: '#A5A5A5' }}>Futuro</h3>
+                                            {/* <div className='col md:col-1' /> */}
+                                            <div className='col-4 md:col-3'>
+                                                <div className='flux'>
+                                                    <div className='grid' style={{ margin: '0', padding: '0' }}>
+                                                        <div className='col-12' style={{ padding: '0', marginBottom: '5%'}}>
+                                                            <h3 style={{ color: '#A5A5A5', margin: '0' }}>Entrada</h3>
+                                                        </div>
+                                                        <div className='col-12' style={{ padding: '0'}}>
+                                                            <span style={{ color: '#0F9803', fontSize: '14px' }}>{cashIn?.toLocaleString("pt-BR", {
+                                                                style: "currency",
+                                                                currency: selectedCurrency,
+                                                            })
+                                                            }
+                                                            </span>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div className='col-12'>
-                                                    <h5 style={{ color: '#A5A5A5' }}>Entrada: {FutureCashIn?.toLocaleString("pt-BR", {
-                                                        style: "currency",
-                                                        currency: selectedCurrency,
-                                                    })}</h5>
+                                            </div>
+                                            <div className='col-4 md:col-3'>
+                                                <div className='flux'>
+                                                    <div className='grid' style={{ margin: '0', padding: '0' }}>
+                                                        <div className='col-12' style={{ padding: '0', marginBottom: '5%'}}>
+                                                            <h3 style={{ color: '#A5A5A5', margin: '0' }}>Saída</h3>
+                                                        </div>
+                                                        <div className='col-12' style={{ padding: '0'}}>
+                                                            <span style={{ color: '#A60000', fontSize: '14px'}}>{cashOut?.toLocaleString("pt-BR", {
+                                                                style: "currency",
+                                                                currency: selectedCurrency,
+                                                            })
+                                                            }
+                                                            </span>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div className='col-12'>
-                                                    <h5 style={{ color: '#A5A5A5' }}>Saída: {FutureCashOut?.toLocaleString("pt-BR", {
-                                                        style: "currency",
-                                                        currency: selectedCurrency,
-                                                    })}</h5>
+                                            </div>
+
+                                            <div className='col-4 md:col-3'>
+                                                <div className='flux'>
+                                                    <div className='grid' style={{ margin: '0', padding: '0' }}>
+                                                        <div className='col-12' style={{ padding: '0', marginBottom: '5%'}}>
+                                                            <h3 style={{ color: '#A5A5A5', margin: '0' }}>Futuro</h3>
+                                                        </div>
+                                                        <div className='col-12' style={{ padding: '0'}}>
+                                                            <div className='grid' style={{ margin: '0' }}>
+                                                                <h5 style={{ color: '#A5A5A5', margin: '0' }}>Entrada: {FutureCashIn?.toLocaleString("pt-BR", {
+                                                                    style: "currency",
+                                                                    currency: selectedCurrency,
+                                                                })}</h5>
+                                                            </div>
+                                                        </div>
+                                                        <div className='col-12' style={{ padding: '0'}}>
+                                                            <div className='grid' style={{ margin: '0'}}>
+                                                                <h5 style={{ color: '#A5A5A5', margin: '0' }}>Saída: {FutureCashOut?.toLocaleString("pt-BR", {
+                                                                    style: "currency", 
+                                                                    currency: selectedCurrency,
+                                                                })}</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div className='col-12'>
+                                        <div className='grid' style={{ marginTop: '5%', display: 'flex', justifyContent: 'center' }}>
+                                            <div className="col-12 md: col-6 lg:col-5">
+                                                <div className="cash-chart">
+                                                    <label htmlFor="group-cashout">Cash-Out por Grupo</label>
+                                                    <Chart type="doughnut" data={chartData3} options={chartOptions3} className="w-full md:w-30rem" />
+                                                </div>
+
+                                            </div>
+                                            <div className="col-12 md: col-6 lg:col-5">
+                                                <div className="cash-chart">
+                                                    <label htmlFor="group-cashin">Cash-In por Grupo</label>
+                                                    <Chart type="doughnut" data={chartData4} options={chartOptions4} className="w-full md:w-30rem" />
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
-
-                                <div className='grid' style={{ marginTop: '5%', display: 'flex', justifyContent: 'center' }}>
-                                    <div className="col-12 md: col-6 lg:col-5">
-                                        <div className="cash-chart">
-                                            <label htmlFor="group-cashout">Cash-Out por Grupo</label>
-                                            <Chart type="doughnut" data={chartData3} options={chartOptions3} className="w-full md:w-30rem" />
-                                        </div>
-
-                                    </div>
-                                    <div className="col-12 md: col-6 lg:col-5">
-                                        <div className="cash-chart">
-                                            <label htmlFor="group-cashin">Cash-In por Grupo</label>
-                                            <Chart type="doughnut" data={chartData4} options={chartOptions4} className="w-full md:w-30rem" />
-                                        </div>
-                                    </div>
-                                </div>
-
                             </TabPanel>
 
                             <TabPanel header="Lucratividade">
@@ -490,9 +512,10 @@ export default function Dashboard() {
                                 </div>
                             </TabPanel>
                         </TabView>
+
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
