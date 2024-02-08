@@ -14,7 +14,7 @@ export default function IncludeWallet({ closeDialog, onSuccess, onError }: { clo
     const [text1, setText1] = useState('');
     const [text2, setText2] = useState('');
     // const toast = useRef<Toast>(null);
-    const navigate = useNavigate();
+    let navigate = useNavigate()
 
     const [selectedCurrency, setSelectedCurrency] = useState('');
     var currencyTypes = Object.values(CurrencyEnum);
@@ -35,17 +35,20 @@ export default function IncludeWallet({ closeDialog, onSuccess, onError }: { clo
             onSuccess('success', 'Success', 'Carteira alterada com sucesso.');
             closeDialog();
         }
-        catch (err) {
-            console.log(err)
-            if (err = 400) {
-                if(text1 == ''){
+        catch (err: any) {
+
+            if (err.code == 400) {
+                if (text1 == '') {
                     onError('error', 'Erro', 'Escolha um título');
                 }
-                else if(selectedCurrency == '')
-                onError('error', 'Erro', 'Escolha uma moeda');
+                else if (selectedCurrency == '')
+                    onError('error', 'Erro', 'Escolha uma moeda');
             }
-            else if (err = 401){
-                navigate('/login')
+            else if (err.code == 401) {
+                onError('error', 'Erro', 'Sessão expirada. Refaça o login');
+                setTimeout(() => {
+                    navigate(`/login`)
+                }, 2000);
             }
         }
     }

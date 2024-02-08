@@ -33,6 +33,7 @@ export default function Login() {
             // await authenticateCognito(user, senha).then(() => {
             //     navigate('/dashboard', { replace: true })
             // })
+            setLoading(true);
 
             try {
                 const result = await httpService.post(`${process.env.REACT_APP_API_URL}/v2/authentication/login`, {
@@ -43,10 +44,15 @@ export default function Login() {
                 sessionStorage.setItem("access_token", result?.data.accessToken.jwtToken);
                 sessionStorage.setItem("refresh_token", result?.data.refreshToken.token);
                 navigate('/dashboard', { replace: true })
+                
             }
+            
 
             catch (err: any) {
                 console.log(err)
+                if (err.code == 401) {
+                    show('error', 'Erro', 'Usuário ou senha incorretos');
+                }
                 if (err.code == 403) {
                     show('error', 'Erro', 'Usuário não credenciado');
                 }
@@ -56,8 +62,9 @@ export default function Login() {
             }
             finally {
                 // Para o spinner após o término da requisição (com sucesso ou erro)
-                setLoading(false);
+                setLoading(false)
             }
+          
         }
 
         else {
@@ -98,7 +105,7 @@ export default function Login() {
                         </div>
 
                         <Button label="Entrar" onClick={(e) => LogUser(e)} style={{ marginTop: "10%" }} />
-                        {loading && <ProgressSpinner style={{ width: '30px', height: '30px', margin: '10px' }} />}
+                        {loading && <ProgressSpinner style={{ width: '100%', height: '30px', marginTop: '3%', display: 'flex', justifyContent: 'center'}} />}
 
                         <div className="Register" style={{ marginTop: "5%" }}>
                             <Link to={`/register`}>Não possuo conta</Link>
