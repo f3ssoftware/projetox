@@ -1,19 +1,18 @@
 import './advanced-filter.css'
 import { useEffect, useRef, useState } from 'react';
 import { InputText } from 'primereact/inputtext';
+import { InputNumber } from 'primereact/inputnumber';
 import { Button } from 'primereact/button';
 import { Calendar } from 'primereact/calendar';
 import { Toast, ToastMessage } from 'primereact/toast';
-import { useFormAction } from 'react-router-dom';
 import { useFormik } from 'formik';
-import { SelectWallet } from '../Balance/SelectWallet/SelectWallet';
 
-export default function AdvancedFilter({ walletId, fetch, closeDialog }: { walletId: string, fetch: Function, closeDialog: any }) {
+export default function AdvancedFilter({ walletId, fetch, closeDialog, walletCurrency }: { walletId: string, fetch: Function, closeDialog: any,  walletCurrency: any }) {
 
     const [dates, setDates] = useState<any[]>()
     var [value2, setValue2] = useState("");
-    const [value3, setValue3] = useState("");
-    const [value4, setValue4] = useState("");
+    const [value3, setValue3] = useState<number|null>(null);
+    const [value4, setValue4] = useState<number|null>(null);
 
     const formik = useFormik({initialValues:{
         email: 'lala@gmail.com',
@@ -81,11 +80,11 @@ export default function AdvancedFilter({ walletId, fetch, closeDialog }: { walle
 
                         <div id='range'>
                             <span className="p-float-label" style={{ width: '48%', marginTop: '6%', fontSize: '90%' }} >
-                                <InputText id='value3' value={value3} onChange={(e) => setValue3(e.target.value)} />
+                                <InputNumber id='value3' value={value3} onChange={(e) => setValue3(e.value)} prefix={walletCurrency + ' '} useGrouping={false} />
                                 <label htmlFor="value3">Valor Mínimo</label>
                             </span>
                             <span className="p-float-label" style={{ width: '48%', marginTop: '6%', fontSize: '90%' }}>
-                                <InputText id='value4' value={value4} onChange={(e) => setValue4(e.target.value)} style={{ marginTop: '1%' }} />
+                                <InputNumber id='value4' value={value4} onChange={(e) => setValue4(e.value)} style={{ marginTop: '1%' }} prefix={walletCurrency + ' '} useGrouping={false} />
                                 <label htmlFor="value4">Valor Máximo</label>
                             </span>
                         </div>
@@ -95,7 +94,7 @@ export default function AdvancedFilter({ walletId, fetch, closeDialog }: { walle
                 </div>
 
                 <div className='enquadramento-filtro'>
-                    {<Button label="FILTRAR" onClick={() => (value3!='' && value4!='' && (value3 >= value4) && walletId)? AdvFilterToast('warn', 'Atenção!', 'Valor mínimo deve ser inferior ao valor máximo.') : onSave()} />}
+                    {<Button label="FILTRAR" onClick={() => (value3!=null && value4!=null && (value3 >= value4) && walletId)? AdvFilterToast('warn', 'Atenção!', 'Valor mínimo deve ser inferior ao valor máximo.') : onSave()} />}
                 </div>
 
             </div>

@@ -41,7 +41,7 @@ export default function Balance() {
   const [showDeleteWallet, setShowDeleteTransaction] = useState(false);
 
   const actions: MenuItem[] = [
-    {
+    { 
       label: "Pagamento",
       icon: "pi pi-money-bill",
       command: async () => {
@@ -382,6 +382,7 @@ export default function Balance() {
         >
           <AdvancedFilter
             walletId={selectedWallet?.id!}
+            walletCurrency={selectedWallet?.currency}
             fetch={fetchTransactions}
             closeDialog={() => {
               setShowFilter(false);
