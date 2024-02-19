@@ -28,7 +28,8 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
     const [neighborhoodValue, setNeighborhoodValue] = useState('');
     const [publicPlaceValue, setPublicPlaceValue] = useState('');
     const [numberValue, setNumberValueValue] = useState<number>(undefined!);
-    const [birthday, setBirthday] = useState('');
+    const [birthday, setBirthday] = useState<string|null>('');
+    const [bday, setBday] = useState('');
     const categories = [
         { sex: 'Masculino', key: 'male' },
         { sex: 'Feminino', key: 'female' },
@@ -73,7 +74,7 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
                     number: numberValue,
                     country: '55'
                 },
-                birthDate: birthday,
+                birthDate: bday,
                 gender: selectedCategory.key,
             },
             products: [productId]
@@ -142,6 +143,10 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
             setPublicPlaceValue('');
         }
     }, [postalCodelValue]);
+
+    // useEffect(()=> {
+    //     setBday(birthday.toISOString())
+    // }, [birthday])
 
 
 
@@ -415,8 +420,13 @@ export default function Step2NaturalPerson({ personChosed, changeStep, paymentMe
 
                                         maxDate={maxDate}
                                         onChange={(e: any) => {
-                                            setBirthday(e.target.value.toISOString());
-                                            formik.setFieldValue('birthday', e.target.value);
+                                            if (e.target.value) {
+                                                setBirthday(e.target.value.toISOString());
+                                                formik.setFieldValue('birthday', e.target.value);
+                                            } else {
+                                                setBirthday(null); // ou qualquer outra ação que você queira tomar quando o valor for nulo
+                                                formik.setFieldValue('birthday', null);
+                                            }
                                         }}
                                         touchUI
                                         selectionMode="single"

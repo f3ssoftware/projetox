@@ -44,9 +44,9 @@ export default function Login() {
                 sessionStorage.setItem("access_token", result?.data.accessToken.jwtToken);
                 sessionStorage.setItem("refresh_token", result?.data.refreshToken.token);
                 navigate('/dashboard', { replace: true })
-                
+
             }
-            
+
 
             catch (err: any) {
                 console.log(err)
@@ -64,7 +64,7 @@ export default function Login() {
                 // Para o spinner após o término da requisição (com sucesso ou erro)
                 setLoading(false)
             }
-          
+
         }
 
         else {
@@ -76,7 +76,7 @@ export default function Login() {
     return (
 
         <div className="container">
-            <Toast ref={toast} />
+
             <div className="fitting">
 
                 <video width="100%" height="100%" style={{ objectFit: "cover" }} loop autoPlay muted >
@@ -85,8 +85,9 @@ export default function Login() {
             </div>
 
             <div className="login">
-                <div className="pull-everybody">
 
+                <div className="pull-everybody">
+                    <Toast ref={toast} />
                     <div className="logo">
                         <SVGLogo fill="#2B2B2B" width={250} height={250} />
                     </div>
@@ -105,7 +106,7 @@ export default function Login() {
                         </div>
 
                         <Button label="Entrar" onClick={(e) => LogUser(e)} style={{ marginTop: "10%" }} />
-                        {loading && <ProgressSpinner style={{ width: '100%', height: '30px', marginTop: '3%', display: 'flex', justifyContent: 'center'}} />}
+                        {loading && <ProgressSpinner style={{ width: '100%', height: '30px', marginTop: '3%', display: 'flex', justifyContent: 'center' }} />}
 
                         <div className="Register" style={{ marginTop: "5%" }}>
                             <Link to={`/register`}>Não possuo conta</Link>
