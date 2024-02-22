@@ -24,9 +24,9 @@ export default function InterForm({
   walletCurrency: CurrencyEnum;
 }) {
   const [amount, setAmount] = useState<number>();
-  const [baseDate, setBaseDate] = useState<string | Date | Date[] | null>([
-    new Date(),
-  ]);
+  const [baseDate, setBaseDate] = useState<string | Date | Date[] | null>(
+   ''
+  );
   const [reference, setReference] = useState("");
   const [selectedType, setSelectedType] = useState("");
   const [wallets, setWallets] = useState<any[]>([]);
@@ -52,7 +52,8 @@ export default function InterForm({
     fetchWallets();
   }, []);
 
-  const asyncNewInterWallet = async () => {
+  const asyncNewInterWallet = async (e:any) => {
+    e.preventDefault()
     try {
       const result = await httpService.post(
         `${process.env.REACT_APP_API_URL}/v1/transactions/inter-wallet`,
@@ -232,7 +233,8 @@ export default function InterForm({
         </div>
         <Button
           label="Salvar"
-          onClick={asyncNewInterWallet}
+          onClick= {(e) => (asyncNewInterWallet(e))}
+        
           style={{ marginTop: "10%" }}
         />
       </div>
