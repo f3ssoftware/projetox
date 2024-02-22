@@ -30,6 +30,7 @@ export default function Checkout() {
     const [cvv, setCvv] = useState<number>();
     const [installments, setInstallments] = useState('')
     const brazilStates: BrazilState[] = Object.values(BrazilState);
+    const [isFormFilled, setIsFormFilled] = useState<boolean>(false)
 
     const checkPostalCode = async (e: any) => {
         e.preventDefault();
@@ -48,11 +49,46 @@ export default function Checkout() {
 
     };
 
+    const verificarFormularioPreenchido = () => {
+       
+        if (
+            email.trim() !== '' &&
+            phone.trim() !== '' &&
+            bDay.trim() !== '' &&
+            cpf.trim() !== '' &&
+            postalCode.trim() !== '' &&
+            address.trim() !== '' &&
+            number.trim() !== '' &&
+            neighborhood.trim() !== '' &&
+            city.trim() !== '' &&
+            state.trim() !== '' &&
+            country.trim() !== '' &&
+            printedName.trim() !== '' &&
+            cardNumber.trim() !== '' &&
+            validity.trim() !== '' &&
+            cvv !== null 
+            // && installments.trim() !== ''
+            
+        ) {
+            // Se todos os campos estiverem preenchidos, atualize isFormFilled para true
+            setIsFormFilled(true);
+        } else {
+            // Caso contrário, atualize isFormFilled para false
+            setIsFormFilled(false);
+        }
+    };
+    
+    
+    useEffect(() => {
+        verificarFormularioPreenchido();
+    }, [email, phone, bDay, cpf, postalCode, address, number, neighborhood, city, state, country, printedName, cardNumber, validity, cvv, installments]);
+
+    
     return (
-        <div className="fullpage" style={{backgroundColor: '#d4d4d4'}}>
+        <div className="fullpage" style={{ backgroundColor: '#d4d4d4' }}>
             <div className="grid">
-                <div className="col-0 md:col-4" style={{ background: '#d4d4d4', height: '101vh' }} />
-                <div className="col-12 md:col-4" style={{ background: 'white'}}>
+                <div className="col-0 md:col-3" style={{ background: '#d4d4d4', height: '105vh' }} />
+                <div className="col-12 md:col-5" style={{ background: 'white' }}>
                     <div className="formStyle">
                         <div className='grid'>
                             <div className='col-12'>
@@ -200,7 +236,7 @@ export default function Checkout() {
                                     <div className='col-12 md:col-6' style={{ margin: 0, marginTop: '2%' }}>
 
                                         <span className="p-float-label" >
-                                            <InputMask value={postalCode} unmask onChange={(e) => { setPostalCode(e.target.value!) }} mask="9999 9999 9999 9999" />
+                                            <InputMask value={cardNumber} unmask onChange={(e) => { setCardNumber(e.target.value!) }} mask="9999 9999 9999 9999" />
                                             <label htmlFor="cardNumber">Nº do cartão</label>
                                         </span>
                                     </div>
@@ -228,12 +264,24 @@ export default function Checkout() {
 
                                 </div>
                             </div>
+
+                            <div className='grid' style={{   width: '100%' }}>
+
+                                <div className='col md:col-4' />
+
+                                <div className='col-12 md:col-4'>
+                                    <Button label="Confirmar pagamento" disabled={!isFormFilled} style={{borderRadius: '60px', width: '100%', backgroundColor: isFormFilled ? '' : 'gray', border: isFormFilled ? '' : 0}} />
+                                </div>
+
+                                <div className='col md:col-4' />
+
+                            </div>
                         </form>
                     </div>
                 </div>
 
 
-                <div className="col-0 md:col-4" style={{ background: '#d4d4d4' }} />
+                <div className="col-0 md:col-3" style={{ background: '#d4d4d4' }} />
             </div>
         </div>
     )
