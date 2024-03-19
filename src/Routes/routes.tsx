@@ -15,6 +15,7 @@ import WalletDetail from '../Pages/Wallet/WalletDetail/WalletDetail';
 import StoreMainPage from '../Pages/Store/Components/StoreMainPage';
 import Store2nd from '../Pages/Store/Components/Store2ndPage';
 import AuthUser from '../Pages/Register/Authenticate_user';
+import Checkout from '../Pages/Store/New checkout/Checkout';
 
 
 function Rotas() {
@@ -39,6 +40,7 @@ function Rotas() {
                     <Route path='/receivable' element={<Receivable />} />
                     <Route path='/store' element={<StoreMainPage />} />
                     <Route path='/storeresume/:cardId' element={<Store2nd />} />
+                    <Route path='/checkout' element={<Checkout />} />
 
 
                 </Route>

@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import jwtDecode from 'jwt-decode';
 import { Button } from "primereact/button";
 import { Sidebar } from 'primereact/sidebar';
-
+import SVGLogo from '../img/LogoSVG'
 export function Casket({ children }: { children?: any }) {
     const [userName, setUserName] = useState('User');
     const [activeMenuItem, setActiveMenuItem] = useState<any>();
@@ -56,10 +56,17 @@ export function Casket({ children }: { children?: any }) {
         <div className="casket-container">
 
             <div className="A">
-                {/* <div className="margin"></div> */}
                 <div className="topbar">
-                    <div style={{ width: '10%', marginLeft: 20 }}>
-                        <Button icon="pi pi-bars" outlined onClick={() => setShowMenu(!showMenu)}></Button>
+                    <div className="grid" style={{ width: '100%'}}>
+                        <div className="col-6 md:col-11">
+                            <div style={{ width: '10%', marginLeft: 20 }}>
+                                <Button icon="pi pi-bars" outlined onClick={() => setShowMenu(!showMenu)}></Button>
+                            </div>
+                        </div>
+
+                        <div className="col-5 md:col-1" style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                            <SVGLogo style={{ width: '45px', height: '45px' }} />
+                        </div>
                     </div>
                     <ul>
                         <Avatar label={userName.substring(0, 1)} style={{ backgroundColor: '#9c27b0', color: '#ffffff' }} />
