@@ -87,8 +87,8 @@ export default function Checkout() {
     return (
         <div className="fullpage" style={{ backgroundColor: '#d4d4d4' }}>
             <div className="grid">
-                <div className="col-0 md:col-3" style={{ background: '#d4d4d4', height: '105vh' }} />
-                <div className="col-12 md:col-5" style={{ background: 'white' }}>
+                <div className="col-0 md:col-4" style={{ background: '#d4d4d4', height: '105vh' }} />
+                <div className="col-12 md:col-4" style={{ background: 'white' }}>
                     <div className="formStyle">
                         <div className='grid'>
                             <div className='col-12'>
