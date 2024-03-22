@@ -29,7 +29,7 @@ function Rotas() {
                 <Route path='/email_register' element={<EmailRegister />} />
                 <Route path='/register' element={<Register />} />
                 <Route path='/token' element={<AuthUser />} />
-                <Route path='/checkout' element={<Checkout />} />
+                <Route path='/checkout/:id' element={<Checkout />} />
 
                 <Route element={<Casket />}>
                     <Route path='/balance' element={<Balance />} />
